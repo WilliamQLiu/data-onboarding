@@ -43,7 +43,7 @@ Different levels of measurement are used to categorize and quantify variables.  
 * __Continuous (aka Quantitative)__ - Deals with numbers (e.g. '_length_', '_age_').  Continuous are further categorized as:
     - __Interval__ - Two or more possibilities, there is a logical order that you can measure (i.e. numbers that you can do arithmetic with), and there are equal intervals (e.g. Fahrenheit measurement of 40 to 50 degrees is the same difference as 50 to 60 degrees)
     - __Ratio__ - Two or more possibilities, there is a logical order that you can measure, there are equal intervals, and there is a true zero point (e.g. the weight of an object cannot weigh less than 0) 
-
+* _Note: Parametric and Non-parametric_: The types of data determines the types of tests: _parametric_ or _non-parametric_, and they affect the type of statistical procedures you can use.  The main differences are that parametric tests have either 'interval' or 'ratio' scales and uses information about the mean and deviation from the mean (meaning it has a relatively normal distribution), which gives it more statistical power.  Nonparametric statistics uses 'nominal' or 'ordinal' data, (i.e. less information) in their calculation and are thus less powerful.  
 
 ### Reliability
 * __Measurement Error__ - the discrepancy between the numbers we use to represent the thing we're measuring and the actual value of measuring it directly (e.g. I measure my height with a ruler, but might be off a bit)
