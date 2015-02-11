@@ -273,6 +273,25 @@ _Regression Analysis_ is a way of predicting an outcome variable from one predic
 *  __residual sum of squares (aka sum of squared residuals)__ - represents the degree of inaccuracy when the best model is fitted to the data
 *  __model sum of squares__ - the improvement going from the worst fit line (which just uses the mean for every value) to the best fit line (our _regression model_).  If this value is large, then the _regression model_ has made a big improvement on how well the outcome variable can be predicted.  If this value is small, then the model isn't much of an improvement.
 *  __F-statistic (aka F-ratio, F-test)__ - a test statistic determines the systematic variance divided by the unsystematic variance (i.e. a measure of how much the model has improved the prediction of the outcome compared to the level of inaccuracy of the model).  A large value (greater than at least 1) means a good model.  The _F-test_ is based on the ratio of the improvement due to the _model sum of squares_ and the difference between the model and the observed data _residual sum of squares_.  
-*  __t-statistic__ - like the _F-test_, usually used in _t-tests_
+*  __t-statistic__ - like the _F-test_, usually used in _t-tests_, helps us assess predictor variables in whether they improve our model
 *  __ANOVA (analysis of variance)__ - tells us whether the overall model results in a good degree of prediction of the outcome variable (Note: it doesn't tell us about the individual contribution of variables in the model)
-*  
+*  __Akaike information criterion (aka AIC)__ - measure of fit (like R^2), except that it penalizes the model for having more variables (whereas R^2 only fits the data better with more predictors).  `insert formula`.  The bigger the value means a worse fit, smaller the value means better fit.  Only compare the AIC to models of the same data (there's no reference; can't say 10 is small or big).
+*  __Bayesian information criterion (aka BIC)__, a measure of fit like _AIC_, but has a larger penalty for more variables than _AIC_.  `insert formula`.  
+
+### Selecting Predictors
+If you're making a complex model, the selection of predictors and its order can have a huge impact.  Put predictors methodically, not just add a bunch and see what results happen.  Here's a few methods:
+*  __Hierarchical Regression__ is where predictors are selected based on past work and the experimenter decides what order to enter the predictors into the model.  Known predictors should be entered in first in order of importance in predicting the outcome.
+*  __Forced entry__ is where all predictors are carefully chosen, then forced into the model simultaneously in random order.
+*  __Stepwise methods__ is where all predictors and their order are based off a mathematical criterion and has a direction of _forward, backward, both_.
+    -  __Forward Direction (aka Forward Selection)__ - An initial model is defined that contains only the constant, then the computer searches for the predictor (out of the ones available) that best predicts the outcome variable.  If the model improves the ability to predict the outcome, the predictor is retained.  The next predictor selected is based on the largest semi-partial correlation (i.e. the 'new variance'; if predictor A explains 40% of the variation in the outcome variable, then there's 60% variation left unexplained.  If predictor B is measured only on the remaining 60% variation).  We stop selecting predictors when the _AIC_ goes up on the remaining variables (remember lower _AIC_ means better model)
+    -  __Backward Direction (aka Backward Elimination)__ - An initial model that starts with all predictor variables, removes one at a time, stops if remaining variables makes _AIC_ go up (remember lower _AIC_ means better model).  This is the preferred method because of _suppressor effects_, which occurs when a predictor has an effect but only when another variable is held constant.  _Forward Direction_ is more likely than _Backward Direction_ to exclude predictors involved in suppressor effects (and thus make a _Type II error_)
+    -  __Both Direction (aka stepwise)__ - Starts the same as _Forward Direction_, but whenever you add a predictor, a removal test of the least useful predictor is done to see if there's any redundant predictors
+    - __Note:__ If you used one of the above stepwise methods to get dressed on a cold day, you might put on pants first instead of underwear.  It'll see that underwear doesn't fit now that you have pants on so it'll skip.  If you don't mind your computer doing lots of calculations, try the _all-subsets_ method.
+    -  __All-subsets methods__ is where we try every combination of predictors to see which is the best fit (using a statistic called _Mallow's Cp_).  You can increase accuraccy, but the possibilities increase exponentially so calculations take much longer.
+    -  __Another Note:__ There's a huge danger of over-fitting with too many variables so it's important to __cross-validate__ the model by splitting into train/test sets.  Remember, the fewer predictors the better.
+
+### How's my model doing?
+We should check how well the model fits the observed data.  To do this, we should look at:
+*  __Outliers and Residuals__ - 
+
+We should also check for _Generalization_, which means can my model generalize to other cases outside of this sample?
