@@ -227,6 +227,14 @@ After checking that the data was entered in correctly, you can do the following:
     - Change the score to be one unit above the next highest score in the data set
     - The mean plus three standard deviations (i.e. this converts back from a z-score)
     - The mean plus two standard deviations (instead of three times above)
+*  __Dummy coding__ - is a way of representing groups of people using only zeros and ones.  To do this, we create several variables (one less than the number of groups we're recoding) by doing:
+    -  Count the number of groups you want to recode and subtract 1
+    -  Create as many new (dummy) variables as step above
+    -  Choose one of your groups as a baseline; this should be your control group or the group that represents the majority of your people (because it might be interesting to compare other groups against the majority)
+    -  Assign the baseline group value of 0 for all of your dummy variables
+    -  For the first dummy variable, assign value of 1 to the first group that you want to compare against the baseline and 0 for all other groups
+    -  Repeat above step for all dummy variables
+    -  Place all your dummy variables into analysis
 
 * __Robust test (robust statistics)__ - statistics that are not unduly affected by outliers or other small departures from model assumptions (i.e. if the distribution is not normal, then consider using a _robust test_ instead of a _data tranformation_).  These tests work using these two concepts _trimmed mean_ and _bootstrap_:
     - __trimmed mean__ - a mean based on the distribution of scores after you decide that some percentage of scores will be removed from each extreme (i.e. remove say 5%, 10%, or 20% of top and bottom scores before the mean is calculated)
@@ -266,7 +274,6 @@ We can see the relationship between variables with _covariance_ and the _correla
 * __biserial and point-biserial correlation coefficient__ - these correlational coefficients are used when one of the two variables is _dichotomous (aka binary)_.  _point-biserial correlation_ is used when one variable is a _discrete_ dichotomy (i.e. dead or alive, can't be half-dead).  _biserial correlation_ is used when that one variable is a _continuous_ dichotomy (i.e. your grade is pass or fail, but it can have multiple levels including A+, C-, F).
 * __partial correlation and semi-partial correlation (aka part correlation)__ - a _partial correlation_ is the relationship between two variables while controlling for the effects of a third variable on both variables in the original correlation.  _semi-partial correlation_ is the relationship between two variables while controlling for the effects of a third variable on only one of the variables in the original correlation.
 
-
 ### Regression Analysis
 _Regression Analysis_ is a way of predicting an outcome variable from one predictor variable (_simple regression_) or from several predictor variables (_multiple regression_).  We fit a model to our data and use it to predict values of the _dependent variable_ from one or more _independent variables_.  *  __method of least squares_ - method to find the line of best fit, which finds the smallest _residuals_ (aka the difference, variance) between the actual data and our model
 *  __regression model (aka regression line)__ is the line of best fit resulting from the _method of least squares_.  Remember that even though this is the best fitting line, the model could still be a bad fit to the data
@@ -291,7 +298,75 @@ If you're making a complex model, the selection of predictors and its order can 
     -  __Another Note:__ There's a huge danger of over-fitting with too many variables so it's important to __cross-validate__ the model by splitting into train/test sets.  Remember, the fewer predictors the better.
 
 ### How's my model doing?
-We should check how well the model fits the observed data.  To do this, we should look at:
-*  __Outliers and Residuals__ - 
+When making a model, we should check for two things 1.) how well the model fits the observed data through _outliers, residuals, influence cases_ and 2.) for _generalization_, which is how the model generalizes to other cases outside your sample).
+*  __Outliers and Residuals__ - We want to look at outliers to see if a small number of cases heavily influence the entire model.  What we do is look for _residuals_, which is the error pressent in the model (smaller the value, the better the fit.  Large values mean outliers).
+    - __Unstandardized residuals (normal residuals)__ are measured in the same units as the outcome variable and are difficult to interpret across different models.  We cannot define a universal cut-off point of what is an _outlier_.  Instead, we need _standardized residuals_.
+    - __Standardized residuals__ are _residuals_ divided by an estimate of their _standard deviation_, which gives us the ability to compare residuals from different models using the properties of _z-scores_ to determine universal guidelines on acceptable and unacceptable values.  E.g. Normally distributed sample, 99% of z-scores should lie between -3.29 and 3.29.  Anything above or below these values are cause for concern and thus the model is a bad fit.
+*  __Influential Cases__ - We should also check to see that any influential cases aren't greatly biasing the model.  We can assess the influence of a particular case using multiple methods:
+    -  __Adjusted Predicted Value__ - So basically, two models are created; one without a particular case and with the case.  The models are then compared to see if the predicted value is the same regardless of whether the value is included.  If the predicted value is the same, the model is good.  If the predicted value is not the same, the model is a bad fit.  The _adjusted predicted value_ is the predicted value for the model without the case.  
+        + __DFFit__ is the difference between the _adjusted predicted value_ (when the model doesn't include a case) from the original predicted value (when the model includes the case).
+        + __DFBeta__ is the difference between a parameter estimated using all cases and estimated when one case is excluded
+    -  __Studentized Residual__ is when the residual is divded by the standard error so it gives us a standardized value; this can be compared across different regression analyses because it is measured in standard units.  It's called the studentized residual because it follows a _Student's t-distribution_.  This is useful to assess the influence of a case on the ability of the model to predict the case, but doesn't provide info on how a case influences the model as a whole (i.e. the ability to predict all cases)
+    -  __Cook's distance__ is a statistic that considers the effect of a single case on the model as a whole (i.e. the overall influence of a case on the model); any values greater than 1 may be cause for concern
+    -  __hat values (aka leverage)__ is another way to check the influence of the observed value of the outcome variable over the predicted values (0 means the case has no influence up to 1 meaning the case has complete influence).  The formula is `insert formula`.  If no cases exert undue influence over the model, then all leverage values should be close to the average value.  Some recommend investigating cases greater than twice to three times the average.
 
-We should also check for _Generalization_, which means can my model generalize to other cases outside of this sample?
+### Assumptions in Regression Analysis
+*  __Generalization__ asks the question of whether our model can generalize to other cases outside of this sample (i.e. apply to a wider population)?  We need to check for these assumptions in regression analysis.  Once these below assumptions are met, the coefficients and parameters of the regression equation are said to be _unbiased_.  An _unbiased model_ tells us that on average, the regression model from the sample is the same as the population model (but not 100%)
+    -  __Variable types__ - All predictor variables must be quantitative or categorical (with two categories).  The outcome variable must be quantitative (measured at the interval level), continuous, and unbounded (no constraints on the variability of the outcome; e.g. if the outcome is a measure ranging from 1 to 10 yet the data collected vary between 3 and 7, then its constrained)
+    -  __Non-zero variance__  - Predictors should have some variation in value (i.e. do not have variances of 0)
+    -  __No perfect multicollinearity__ - Should be no perfect linear relationship between two or more predictors (and don't correlate too highly).
+    -  __Predictors are uncorrelated with 'external variables'__ - external variables that haven't been included in the regression model which influence the outcome variable.  If external variables do correlate with the predictors, then the conclusions we draw from the model are unreliable (because other variables exist that can predict the outcome)
+    -  __Homoscedasticity__ - At each level of the predictor variable(s), the variance of the residual terms should be constant.  The residuals at each level of the predictor(s) should have the same variance (_homoscedasticity_); when the variances are very unequal there is _heteroscedasticity_
+    -  __Independent Errors__ - For any two observations the residual terms should be uncorrelated (i.e. independent, sometimes called lack of _autocorrelation_).
+        +  __Durbin-Watson test__ is a test that checks for serial correlations between errors (i.e. whether adjacent residuals are correlated).  The test statistic can vary between 0 and 4:
+            *  2 means that the residuals are uncorrelated
+            *  <2 means a positive correlation between adjacent residuals
+            *  >2 means a negative correlation between adjacent residuals
+            *  <1 or >3 means definite cause for concern
+            *  Even if value is close to 2, can still be cause for concern (this is just a quick test, still depends on sample size and model)
+            *  _Note:_ this test depends on the order; if you reorder the data, you'll get a different value
+    -  __Normally Distributed Errors__ - assumed that the residuals in the model are random, normally distributed variables with a mean of 0, which means the differences between the model and the observed data are most frequently zero or close to zero and that differences greater than zero are rare.  _Note:_ does not mean that predictors have to be normally distributed
+    -  __Independence__ - All the values of the outcome variable are independent
+    -  __Linearity__ - the mean values of the outcome variable for each increment of the predictor(s) lie along a straight line (i.e. this is a regression, we should be modeling a linear relationship)
+*  __Cross-validation__ - A way to assess the accuracy of our model/ how well our model can predict the outcome in a different sample.  If a model is generalized, it can predict another sample well.  If the model is not generalized, it can't predict another sample well. 
+    -  _Adjusted R^2_ - this adjusted value indicates the loss of predictive power (aka _shrinkage_).  The equation is _Stein's Formula_, `insert formula`.  Note this is different than R^2, which uses _Wherry's equation_.
+    -  _Data splitting_ - Usually split data randomly to 80% train, 20% test
+    -  _Sample size_ - Depends on the size of effect (i.e. how well our predictors predict the outcome), how much statistical power we want and the number of predictors.  As a general rough guide, check out Figure 7.10 in the book (Page 275)
+    -  _Multicollinearity_ - exists when there is a strong relationship between two or more predictors in a regression model.  _Perfect collinearity_ exists when at least one predictor is a perfect linear combination of the others (e.g. two predictors have a correlation coefficient of 1).  As _collinearity_ increases, these three problems arise:
+        +  _Untrustworthy bs_ - b coefficients increase as collinearity increase; big standard errors for b coefficients mean that bs are more variable across samples, thus b is less likely to represent the population, thus predictor equations will be unstable across samples
+        +  _limits size of R_ - Having uncorrelated predictors gives you better _unique variance_
+        +  _importance of predictors_ - multicollinearity makes it difficult to assess the individual importance of a predictor.  If the predictors are highly correlated then we can't tell which of say two variables is important
+    -  _Testing collinearity_ - To test for collinearity, you can do the following:
+        +  _correlation matrix_ shows relationships between variables to variables with anything above say above .8 as an indicator of really highly correlated and might be an issue, however it misses on detecting _multicollinearity_ since it only looks at one variable at a time
+        +  _variance inflation factor (VIF)_ is a collinearity diagnostic that indicates whether a predictor has a strong linear relationship with another predictor(s) and is good for spotting relationships between multiple variables.  There's no hard and fast rules, but a 10 is a good value to start worrying or if the average _VIF_ is close to 1, then _multicollinearity_ might be biasing the model
+        +  _tolerance statistic_ is the reciprocal of _variance inflation factor (i.e. 1/VIF)_ Any values below .1 are serious concerns
+    -  _Plotting_ is a good way to check assumptions of regression to make sure the model generalizes beyond your sample.
+* __Plotting__ - You can check assumptions quickly with graphs
+    -  Graph the _standardized residuals_ against the _fitted (predicted) values_.  
+        +  If the plot looks like a random array of dots, then it's good.
+        +  If the dots seem to get more or less spread out over the graph (like a funnel shape) then is probably a violation of the assumption of _homogeneity of variance_.
+        +  If the dots have a pattern to them (like a curved shape) then this is probably a violation of the assumption of _linearity_
+        +  If the dots have a pattern and are more spread out at some points on the plot than others then this probably reflects violations of both _homogeneity of variance_ and _linearity_
+    -  Graph the histogram of the residuals
+        +  If the histogram looks like a normal distribution (and the Q-Q plot looks like a diagonal line) then its good
+        +  If the histogram looks non-normal, then things might not be good
+
+### Violating Linear Regression Assumptions
+If assumptions are violated, then you cannot generalize your findings beyond your sample.  You can try correcting the samples using:
+    -  If residuals show problems with _heteroscedasticity_ or _non-normality_, you could try transforming the raw data (though might not affect the residuals)
+    -  If there's a violation of the _linearity_ assumption, then you could do a logistic regression instead
+    -  You can also try a _robust regression (aka bootstrapping, robust statistics)_, which is an alternative to the _least squares regression_ when there's too many outliers or influential cases
+
+### Logistic Regression
+Logistic Regression is multiple regression, but with an outcome variable that is a categorical and predictor variables that are continuous or categorical.  There's two types of logistic regression:
+*  __binary logistic regression__ is used to predict a binary response (e.g. tumor cancerous or benign).  
+*  __multinomial (or polychotomous) logistic regression__ predicts more than two categories (e.g. favorite color).
+
+### Assessing the Logistic Regression Model
+There's a lot of similarities between linear and logistic regressions.
+* __logit__ - In _linear/simple regression_, you predict the value of Y given X.  In _logistic regression_, you predict the probability of Y occuring given X.  You can't use _linear regression_ equations on a _logistic regression_ unless you do some data transformations (like _logit_, which logs the data)
+*  __log-likelihood__ - In _linear/simple regression_, we used R^2 (the _Pearson correlation_) to check between observed values of the outcome and the values predicted by the regression model.  For _logistic regression_, we use the _log-likelihood_ given by `insert equation`, which is based on summing the probabilities associated with the predicted and actual outcomes (i.e. how much unexplained information there is after the model has been fitted).  A larger _log-likelihood_ means poor fitting model because there's more unexplained observations.
+*  __maximum-likelihood estimation (MLE)__ is a method to estimate the parameters of a statistical model (i.e. the observed values most likely to have occurred)
+*  __deviance (aka -2LL)__ is related to the _log-likelihood_ and its equation is `deviance =-2*log-likelihood` and sometimes used instead of the _log-likelihood_ because it has a _chi-square distribution_, which makes it easy to calculate the significance of the value.
+*  __R-statistic__ is the partial correlation between the outcome variable and each of the predictor variables; can be between -1 (meaning as the the predictor value increases, likelihood of the outcome occurring decreases) to 1 (meaning that as the predictor variable increases, so does the likelihood of the event occurring).  The equation is `insert equation`
+*  
