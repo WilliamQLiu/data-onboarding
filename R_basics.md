@@ -214,7 +214,7 @@ To get more accurate (instead of just eye-balling), we can:
 * __independence__ - different depending on the test you're using
 
 
-### Data Cleaning (trying to make data fit into a normal distribution, and what happens when you can't)
+### Linear Regression - Data Cleaning (trying to make data fit into a normal distribution, and what happens when you can't)
 After checking that the data was entered in correctly, you can do the following:
 
 * __Remove the outlier__ - delete the case only if you believe this is not representative (e.g. for Age someone puts 200, pregnant male)
@@ -244,7 +244,7 @@ After checking that the data was entered in correctly, you can do the following:
         + `my_object <- boot(data, function, replications)` where _data_ is the dataframe, _function_ is what you want to bootstrap, _replications_ is the number of bootstrap samples (usually 2,000)
         + _boot.ci(my_object)_ returns an estimate of bias, empirically derived standard error, and confidence intervals
 
-### Covariance and Correlation
+### Linear Regression - Covariance and Correlation
 We can see the relationship between variables with _covariance_ and the _correlation coefficient_.
 
 * __variance__ - remember that _variance_ of a single variable represents the average amount that the data vary from the mean
@@ -274,7 +274,7 @@ We can see the relationship between variables with _covariance_ and the _correla
 * __biserial and point-biserial correlation coefficient__ - these correlational coefficients are used when one of the two variables is _dichotomous (aka binary)_.  _point-biserial correlation_ is used when one variable is a _discrete_ dichotomy (i.e. dead or alive, can't be half-dead).  _biserial correlation_ is used when that one variable is a _continuous_ dichotomy (i.e. your grade is pass or fail, but it can have multiple levels including A+, C-, F).
 * __partial correlation and semi-partial correlation (aka part correlation)__ - a _partial correlation_ is the relationship between two variables while controlling for the effects of a third variable on both variables in the original correlation.  _semi-partial correlation_ is the relationship between two variables while controlling for the effects of a third variable on only one of the variables in the original correlation.
 
-### Regression Analysis
+### Linear Regression Analysis
 _Regression Analysis_ is a way of predicting an outcome variable from one predictor variable (_simple regression_) or from several predictor variables (_multiple regression_).  We fit a model to our data and use it to predict values of the _dependent variable_ from one or more _independent variables_.  *  __method of least squares_ - method to find the line of best fit, which finds the smallest _residuals_ (aka the difference, variance) between the actual data and our model
 *  __regression model (aka regression line)__ is the line of best fit resulting from the _method of least squares_.  Remember that even though this is the best fitting line, the model could still be a bad fit to the data
 *  __residual sum of squares (aka sum of squared residuals)__ - represents the degree of inaccuracy when the best model is fitted to the data
@@ -285,7 +285,7 @@ _Regression Analysis_ is a way of predicting an outcome variable from one predic
 *  __Akaike information criterion (aka AIC)__ - measure of fit (like R^2), except that it penalizes the model for having more variables (whereas R^2 only fits the data better with more predictors).  `insert formula`.  The bigger the value means a worse fit, smaller the value means better fit.  Only compare the AIC to models of the same data (there's no reference; can't say 10 is small or big).
 *  __Bayesian information criterion (aka BIC)__, a measure of fit like _AIC_, but has a larger penalty for more variables than _AIC_.  `insert formula`.  
 
-### Selecting Predictors
+### Linear Regression - Selecting Predictors
 If you're making a complex model, the selection of predictors and its order can have a huge impact.  Put predictors methodically, not just add a bunch and see what results happen.  Here's a few methods:
 *  __Hierarchical Regression__ is where predictors are selected based on past work and the experimenter decides what order to enter the predictors into the model.  Known predictors should be entered in first in order of importance in predicting the outcome.
 *  __Forced entry__ is where all predictors are carefully chosen, then forced into the model simultaneously in random order.
@@ -297,7 +297,7 @@ If you're making a complex model, the selection of predictors and its order can 
     -  __All-subsets methods__ is where we try every combination of predictors to see which is the best fit (using a statistic called _Mallow's Cp_).  You can increase accuraccy, but the possibilities increase exponentially so calculations take much longer.
     -  __Another Note:__ There's a huge danger of over-fitting with too many variables so it's important to __cross-validate__ the model by splitting into train/test sets.  Remember, the fewer predictors the better.
 
-### How's my model doing?
+### Linear Regression - How's my model doing?
 When making a model, we should check for two things 1.) how well the model fits the observed data through _outliers, residuals, influence cases_ and 2.) for _generalization_, which is how the model generalizes to other cases outside your sample).
 *  __Outliers and Residuals__ - We want to look at outliers to see if a small number of cases heavily influence the entire model.  What we do is look for _residuals_, which is the error pressent in the model (smaller the value, the better the fit.  Large values mean outliers).
     - __Unstandardized residuals (normal residuals)__ are measured in the same units as the outcome variable and are difficult to interpret across different models.  We cannot define a universal cut-off point of what is an _outlier_.  Instead, we need _standardized residuals_.
@@ -310,7 +310,7 @@ When making a model, we should check for two things 1.) how well the model fits 
     -  __Cook's distance__ is a statistic that considers the effect of a single case on the model as a whole (i.e. the overall influence of a case on the model); any values greater than 1 may be cause for concern
     -  __hat values (aka leverage)__ is another way to check the influence of the observed value of the outcome variable over the predicted values (0 means the case has no influence up to 1 meaning the case has complete influence).  The formula is `insert formula`.  If no cases exert undue influence over the model, then all leverage values should be close to the average value.  Some recommend investigating cases greater than twice to three times the average.
 
-### Assumptions in Regression Analysis
+### Assumptions in Linear Regression Analysis
 *  __Generalization__ asks the question of whether our model can generalize to other cases outside of this sample (i.e. apply to a wider population)?  We need to check for these assumptions in regression analysis.  Once these below assumptions are met, the coefficients and parameters of the regression equation are said to be _unbiased_.  An _unbiased model_ tells us that on average, the regression model from the sample is the same as the population model (but not 100%)
     -  __Variable types__ - All predictor variables must be quantitative or categorical (with two categories).  The outcome variable must be quantitative (measured at the interval level), continuous, and unbounded (no constraints on the variability of the outcome; e.g. if the outcome is a measure ranging from 1 to 10 yet the data collected vary between 3 and 7, then its constrained)
     -  __Non-zero variance__  - Predictors should have some variation in value (i.e. do not have variances of 0)
@@ -357,16 +357,51 @@ If assumptions are violated, then you cannot generalize your findings beyond you
     -  If there's a violation of the _linearity_ assumption, then you could do a logistic regression instead
     -  You can also try a _robust regression (aka bootstrapping, robust statistics)_, which is an alternative to the _least squares regression_ when there's too many outliers or influential cases
 
-### Logistic Regression
+### Logistic Regression - Types
 Logistic Regression is multiple regression, but with an outcome variable that is a categorical and predictor variables that are continuous or categorical.  There's two types of logistic regression:
 *  __binary logistic regression__ is used to predict a binary response (e.g. tumor cancerous or benign).  
-*  __multinomial (or polychotomous) logistic regression__ predicts more than two categories (e.g. favorite color).
+*  __multinomial (or polychotomous) logistic regression__ predicts an outcome variable that has more than two categories (e.g. favorite color).
+*  There's no additional formulas between these two types of _logistic regression_; the reason is that _multinomial logistic regression_ just breaks the outcome variable down into a series of comparisons between two categories.  Say we have three outcome categories (A, B, C) then the analysis will consist of a series of two comparisons (e.g. A vs B and A vs C) or (A vs C and B vs C) or (B vs A and B vs C); basically you have to select a baseline category.
 
 ### Assessing the Logistic Regression Model
-There's a lot of similarities between linear and logistic regressions.
-* __logit__ - In _linear/simple regression_, you predict the value of Y given X.  In _logistic regression_, you predict the probability of Y occuring given X.  You can't use _linear regression_ equations on a _logistic regression_ unless you do some data transformations (like _logit_, which logs the data)
-*  __log-likelihood__ - In _linear/simple regression_, we used R^2 (the _Pearson correlation_) to check between observed values of the outcome and the values predicted by the regression model.  For _logistic regression_, we use the _log-likelihood_ given by `insert equation`, which is based on summing the probabilities associated with the predicted and actual outcomes (i.e. how much unexplained information there is after the model has been fitted).  A larger _log-likelihood_ means poor fitting model because there's more unexplained observations.
-*  __maximum-likelihood estimation (MLE)__ is a method to estimate the parameters of a statistical model (i.e. the observed values most likely to have occurred)
-*  __deviance (aka -2LL)__ is related to the _log-likelihood_ and its equation is `deviance =-2*log-likelihood` and sometimes used instead of the _log-likelihood_ because it has a _chi-square distribution_, which makes it easy to calculate the significance of the value.
-*  __R-statistic__ is the partial correlation between the outcome variable and each of the predictor variables; can be between -1 (meaning as the the predictor value increases, likelihood of the outcome occurring decreases) to 1 (meaning that as the predictor variable increases, so does the likelihood of the event occurring).  The equation is `insert equation`
-*  
+*  What are we measuring?  (A comparison between linear and logistic regressions)
+*  __logit__ - In _linear/simple regression_, you predict the value of Y given X.  In _logistic regression_, you predict the probability of Y occuring given X.  You can't use _linear regression_ equations on a _logistic regression_ problem (i.e. outcome is a categorical instead of continuous) unless you do some data transformations (like _logit_, which logs the data)
+*  __log-likelihood__ - In _linear/simple regression_, we used R^2 (the _Pearson correlation_) to check between observed values of the outcome and the values predicted by the regression model.  For _logistic regression_, we use the _log-likelihood_ given by `insert equation`, which is based on summing the probabilities associated with the predicted and actual outcomes (i.e. how much unexplained information there is after the model has been fitted).  A larger _log-likelihood_ means poor fitting model because there's more unexplained observations.  This is good for overall fit.  For partial fit, see _R-statistic_.
+    -  __maximum-likelihood estimation (MLE)__ is a method to estimate the parameters of a statistical model (i.e. given a sample population, it estimates what most likely would have occured).  MLE gives you the coefficients most likely to have occurred.
+    -  __deviance (aka -2LL)__ is related to the _log-likelihood_ and its equation is `deviance =-2*log-likelihood` and sometimes used instead of the _log-likelihood_ because it has a _chi-square distribution_, which makes it easy to calculate the significance of the value.
+*  R - How the model fits the data
+    -  __R-statistic__ is the partial correlation between the outcome variable and each of the predictor variables (opposed to _log-likelihood_ which is for the overall correlation instead of partial); can be between -1 (meaning as the the predictor value increases, likelihood of the outcome occurring decreases) to 1 (meaning that as the predictor variable increases, so does the likelihood of the event occurring).  The equation is `insert equation`.
+    -  __Hosmer and Lemeshow's RL^2 measure__ is `insert equation` and is the proportional reduction in the absolute value of the log-likelihood measure and thus is a measure of how much the badness of fit improves as a result of the inclusion of the predictor values.  Values range from 0 (predictors are useless at predicting the outcome variable) to 1 (model predicts the outcome variable perfectly)
+    -  __Cox and Snell's RCS^2__ is `insert equation` and __Nagelkerke's RN^2__ is `insert equation`, both of which are another way of getting a equivalent of R^2 in linear regression.
+*  Information Criteria - Penalize a model for having more predictors
+    -  __Akaike Information Criterion (AIC)__ for logistic regression is `AIC = -2LL +2k` where `-2LL` is the _deviance_ and `k` is the number of predictors
+    -  __Bayes Information Criterion (BIC)__ for logistic regression is `BIC = -2LL +2k * log(n)` where `n` is the number of cases
+*  How much are each predictor(s) contributing?
+    -  __t-statistic__ - in linear regression, the regression coefficient _b_ and their standard errors created the _t-statistic_, which tells us how much a preditor was contributing
+    -  __z-statistic (aka the Wald statistic)__ - in logistic regression, the _z-statistic_ tells us if the _b_ coefficient for that predictor is significantly different than zero.  If a coefficient _b_ is much greater than zero, then that predictor is making a significant contribution to the prediction of the outcome.  `z = b / (SEb)`.  Be warned, when the z-statistic value is large, the _standard error_ tends to be inflated, resulting in _z-statistic_ being underestimated.  An inflated _standard error_ increases the probability of rejecting a predictor as being significant when in reality it is making a significant contribution (i.e. _Type II error_)
+*  So the coefficient _b_ in a _logistic regression_ is an exponent instead of multiplying, how does that work out / what does it mean?
+    -  __odds__ as we normally know it is the probability of something happening / something not happening (e.g. probability becoming pregnant divided by / probability of not becoming pregnant).  This isn't the same as the _logistic regression_'s _odds ratio_ mentioned below.
+    -  __odds ratio__ is the exponential of B (i.e., e^B), which is the change in odds resulting from a unit changes in the predictor.  E.g. calculate the odds of becoming pregnant when a condom is not used, calculate the odds of becoming pregnant when a condom is used, then calculate the proportionate change in odds between the two.  
+        *  Formula is: `change in odds = odds after a unit change in the predictor / original odds`
+        *  if the value is greater than 1, then it means as the predictor increases, the odds of the outcome occuring also increases
+        *  if the value is less than 1, then it means as the predictor increases, the odds of the outcome occuring decrease
+*  How do we know what order to put in / take out predictors in _logistic regression_?
+    -  __forced entry method__ - the default method for conducting regression; place in one block and estimate parameters for each predictor
+    -  __stepwise method__ - select a forward, backward, or both stepwise method (remember the issues with it though).
+*  What are Logistic Regression assumptions?
+    -  __Linearity__ - In linear regression we assume the outcome had a linear relationship with the predictors.  However, logistic regression's outcome is categorical so our linear regression assumptions don't apply.  Instead, with logistic regression we check if there are any linear relationships between any continuous predictors and the _logit_ of the outcome variable.
+    -  __Independence of errors__ - Same as linear regression where the cases of data are not related
+    -  __Multicollinearity__ - Same as linear regression where predictors should not be too highly correlated; can check with _tolerance statistic_ and _VIF statistics_, the eigenvalues of the scaled, uncentred cross-roducts matrix, the condition indices and the variance proportions.
+*  What are situations where Logistic Regression can cause trouble?
+    -  Not enough samples for specific categories (e.g. checking if people are happy, but only _n_ of 1 for people that are 80-year old, Buddhist, left-handed lesbian).  To spot, create a crosstabulations and look for really high _standard errors_.  To fix, collect more data.
+    -  __complete separation__ is where the outcome variable can be perfectly predicted by one variable or a combination of variables.  This causes issues in that there's no data in the middle probabilities (where we're not very sure of the probability) which can cause a wide range of curves/probabilities.  E.g. tell between cats and burglars, there's no cats that weigh more than 15kg and no burgulars that weigh less than 30kg.  The issue is usually caused when there's too many variables fitted to too few cases.  To fix, collect more data or use a simpler model.
+
+### Comparing two means (aka groups)
+We've looked at relationships between variables, but sometimes we're interested in differences between groups of people.  This is useful in making causal inferences (e.g. two groups of people, one gets a sugar pill and other gets actual pill).  There's two different ways to expose people to experiments: _between-group_ or _independent design_ as well as exposing the same group to all experiments, just at different points in time (_repeated-measures design_).
+*  __t-test__ - are used to test whether two group means are different.  There's two types including _independent-means t-test_ and _dependent-means t-test_.
+    -  __independent-means t-test (aka independent-measures, independent-samples t-test)__ is used when there are two experimental conditions and different participants were assigned to each condition 
+    -  __dependent-means t-test (aka matched-pairs, pair-samples t-test)__ - is used when there are two experimental conditions and the same participants took part in both conditions of the experiment
+*  __Generalized Linear Model (GLM)__ the _t-test_ can be used as a generalization of ordinary linear regression and it allows you to test differences between two means.
+*  Assumptions of _t-tests_, which are basically regressions so it has much of the same assumptions (_parametric tests_ based on the normal distribution)
+    -  Sampling distribution is _normally distributed_.   
+
