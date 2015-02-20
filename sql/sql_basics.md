@@ -47,7 +47,6 @@ We can do the following query:
 *  a table holds lots of rows and columns of data
 *  a record is a particular instance of a row and column
 
-
 ### COUNT
 
     SELECT COUNT(*) FROM sampdb.president
@@ -71,9 +70,20 @@ We can do the following query:
     SELECT ... score * 2 AS doubled_score
     SELECT ... DATEDIFF(death, birth)
     SELECT ... CONCAT(first_name, ' ', last_name)
+    SELECT ... UNIQUE(last_name, middle_name, first_name)
 
 *  Can create an alias with `AS` (required for subqueries)
 *  Can run functions (e.g. `CONCAT` combines strings into one, `DATEDIFF` gets difference in days)
+*  Can get unique values using `UNIQUE`
+
+### NULL Values and Functions
+
+*  __NULL__ values represent missing or unknown data (not the same as the value 0).
+*  To test for _NULL_, do __IS NULL__ or __IS NOT NULL__.
+    -  __IS NULL__ checks if the value is null.  For example, `SELECT LastName, FirstName FROM Persons WHERE LastName IS NULL`
+    -  __IS NOT NULL__ checks if the value is not null.  For example, `SELECT LastName, FirstName FROM Persons WHERE LastName IS NOT NULL`
+*  There are functions __ISNULL(), NVL(), IFNULL(), and COALESCE()__ that specify how we want to treat a _NULL_ value
+    -  For MySQL, _IFNULL()_ tells us how to treat a _NULL_ value (in this case, replacing it with 0): `SELECT UnitPrice*(UnitsInStock+IFNULL(UnitsOnOrder,0)) FROM Products`
 
 ### WHERE
 
@@ -133,6 +143,14 @@ Sample Output:
         - Requires use of alias (`AS`)
         - The _outer query_ executes first, then the _inner query_; this is because the _inner query_ depends on the output of the _outer query_
         - These queries are slower than _non-correlated queries_ (think about doing a _join_ instead)
+        - _correlated subqueries_ usually use `EXISTS` or `NOT EXISTS`
+
+### EXISTS
+
+*  The __EXISTS__ and __NOT EXISTS__ conditions are used with a subquery (usually the _correlated subquery_).  Condition is met if the subquery returns at least one row.  It can be used with _SELECT, INSERT, UPDATE, or DELETE_ statements.
+*  `SELECT * FROM mysuppliers WHERE NOT EXISTS (SELECT * FROM myorders WHERE mysuppliers.supplier_id = myorders.order_id);`
+*  Note that these are very inefficient since the sub-query is re-run for every single row so use only if no other solution
+
 
 ### JOINS
 Used to combine rows from two or more tables.  Types of joins include:
@@ -149,8 +167,49 @@ Used to combine rows from two or more tables.  Types of joins include:
     -  `SELECT column_name(s) FROM table1 UNION SELECT column_name(s) FROM table2`
     -  `SELECT column_name(s) FROM table1 UNION ALL SELECT column_name(s) FROM table2`
 
+### Primary Key (PK) and Foreign Key (FK)
+*  A __primary key__ constraint uniquiely identifies each record in a database table.  These values must be unique, cannot contain NULL values, and each table can only have one primary key.  Note that you can have multiple column values that make up the primary key (e.g. P_ID, LastName, SSN).
+    -  Add a _primary key_ to a table with a single column (e.g. P_ID) as the constraint: `ALTER TABLE MyTable ADD PRIMARY KEY (P_ID)`
+    -  Add a _primary key_ to a table with multiple columns (e.g. P_ID, LastName) as the constraint: `ALTER TABLE MyTable ADD PRIMARY KEY(P_ID, LastName)`
+    -  Remove a _primary key_: `ALTER TABLE MyTable DROP PRIMARY KEY`
+*  A __foreign key__ constraint in one table is just a _primary key_ in another table.
+    -  Add a _foreign key_ on a single column as the constraint: `ALTER TABLE MyTable ADD FOREIGN KEY (P_ID) REFERENCES OtherTable(P_ID)`
+    -  Add a _foreign key_ on multiple columns (e.g. P_ID) as the constraint: `ALTER TABLE MyTable ADD CONSTRAINT my_fk FOREIGN KEY (P_ID) REFERENCES OtherTable(P_ID)`
+    -  Remove a _foreign key_ with: `ALTER TABLE MyTable DROP FOREIGN KEY my_fk`
 
+### DROP and TRUNCATE
+*  To delete an entire database, be extra sure you want to and can spell correctly, then do: `DROP DATABASE MyDatabase`.  This deletes everything in the database.
+*  To delete an entire table (including the table itself), be extra sure you want to and can spell correctly, then do: `DROP TABLE MyTable`
+*  To delete the data inside an entire table, do: `TRUNCATE TABLE MyTable`
 
+### ALTER
+*  To add, delete, or modify columns in an existing table, use __ALTER__.
+*  To add a column in a table, use: `ALTER TABLE MyTable MODIFY COLUMN MyColumn <datatype>`
+*  To delete a column in a table, use: `ALTER TABLE MyTable DROP COLUMN MyColumn`
+*  To modify a column in a table, use: `ALTER TABLE MyTable MODIFY COLUMN MyColumn <datatype>`
+
+### INSERT
+*  To insert data by field: `INSERT INTO MyDatabase.MyTable SET ThisField = ThisData`
+*  To insert data by row: `INSERT INTO MyDatabase.MyTable VALUES ('field1', 'field2', 'field3'`
+
+### UPDATE
+    UPDATE MyDatabase.MyTable SET ThisField = ThisData
+
+### DELETE
+    DELETE FROM MyDatabase.MyTable  # Careful, no criteria deletes the entire database!
+
+### IF
+    IF(2>1, 'OK', 'NOT)
+
+### CASE
+    CASE
+        WHEN 2 > 1
+            THEN 'OK'
+        WHEN 1==1
+            THEN 'YEP'
+        ELSE
+            'NOT OK'
+    END
 
 ## Other
 
@@ -172,6 +231,9 @@ Used to combine rows from two or more tables.  Types of joins include:
 *  For every index on a table, the database must reorder the index for a new entry
 *  Each index takes up space in storage and memory
 *  Do 'profiling' to see where things are slow
+*  To create an index, do: `CREATE INDEX MyIndex on MyTable (colToIndex)`
+*  To create an index on a combination of volumns, do: `CREATE INDEX MyIndex on MyTable(colToIndex1, colToIndex2, colToIndex3)`
+*  To drop an index, do: `ALTER TABLE MyTable DROP INDEX MyIndex`
 
 ### Normalization (Nth normal form)
 *  Principles of Modeling Data 'norms'

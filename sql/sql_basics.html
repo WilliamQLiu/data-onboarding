@@ -1076,10 +1076,25 @@ SELECT MAX(age) FROM sampdb.president
 <h3 id="functions-as-datediff-concat-etc"><a name="user-content-functions-as-datediff-concat-etc" href="#functions-as-datediff-concat-etc" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Functions (AS, DATEDIFF, CONCAT, etc.)</h3>
 <pre><code>SELECT &hellip; score * 2 AS doubled_score
 SELECT &hellip; DATEDIFF(death, birth)
-SELECT &hellip; CONCAT(first_name, &lsquo; &lsquo;, last_name)</code></pre>
+SELECT &hellip; CONCAT(first_name, &lsquo; &lsquo;, last_name)
+SELECT &hellip; UNIQUE(last_name, middle_name, first_name)</code></pre>
 <ul>
 <li>Can create an alias with <code>AS</code> (required for subqueries)</li>
 <li>Can run functions (e.g. <code>CONCAT</code> combines strings into one, <code>DATEDIFF</code> gets difference in days)</li>
+<li>Can get unique values using <code>UNIQUE</code></li>
+</ul>
+<h3 id="null-values-and-functions"><a name="user-content-null-values-and-functions" href="#null-values-and-functions" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>NULL Values and Functions</h3>
+<ul>
+<li><strong>NULL</strong> values represent missing or unknown data (not the same as the value 0).</li>
+<li>To test for <em>NULL</em>, do <strong>IS NULL</strong> or <strong>IS NOT NULL</strong>.<ul>
+<li><strong>IS NULL</strong> checks if the value is null.  For example, <code>SELECT LastName, FirstName FROM Persons WHERE LastName IS NULL</code></li>
+<li><strong>IS NOT NULL</strong> checks if the value is not null.  For example, <code>SELECT LastName, FirstName FROM Persons WHERE LastName IS NOT NULL</code></li>
+</ul>
+</li>
+<li>There are functions <strong>ISNULL(), NVL(), IFNULL(), and COALESCE()</strong> that specify how we want to treat a <em>NULL</em> value<ul>
+<li>For MySQL, <em>IFNULL()</em> tells us how to treat a <em>NULL</em> value (in this case, replacing it with 0): <code>SELECT UnitPrice*(UnitsInStock+IFNULL(UnitsOnOrder,0)) FROM Products</code></li>
+</ul>
+</li>
 </ul>
 <h3 id="where"><a name="user-content-where" href="#where" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>WHERE</h3>
 <pre><code>SELECT COUNT(first_name) FROM sampdb.president WHERE last_name=&rdquo;Adams&rdquo;</code></pre>
@@ -1147,10 +1162,17 @@ SELECT &hellip; CONCAT(first_name, &lsquo; &lsquo;, last_name)</code></pre>
 <li>Requires use of alias (<code>AS</code>)</li>
 <li>The <em>outer query</em> executes first, then the <em>inner query</em>; this is because the <em>inner query</em> depends on the output of the <em>outer query</em></li>
 <li>These queries are slower than <em>non-correlated queries</em> (think about doing a <em>join</em> instead)</li>
+<li><em>correlated subqueries</em> usually use <code>EXISTS</code> or <code>NOT EXISTS</code></li>
 </ul>
 </li>
 </ul>
 </li>
+</ul>
+<h3 id="exists"><a name="user-content-exists" href="#exists" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>EXISTS</h3>
+<ul>
+<li>The <strong>EXISTS</strong> and <strong>NOT EXISTS</strong> conditions are used with a subquery (usually the <em>correlated subquery</em>).  Condition is met if the subquery returns at least one row.  It can be used with <em>SELECT, INSERT, UPDATE, or DELETE</em> statements.</li>
+<li><code>SELECT * FROM mysuppliers WHERE NOT EXISTS (SELECT * FROM myorders WHERE mysuppliers.supplier_id = myorders.order_id);</code></li>
+<li>Note that these are very inefficient since the sub-query is re-run for every single row so use only if no other solution</li>
 </ul>
 <h3 id="joins"><a name="user-content-joins" href="#joins" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>JOINS</h3>
 <p>Used to combine rows from two or more tables.  Types of joins include:</p>
@@ -1177,6 +1199,56 @@ SELECT &hellip; CONCAT(first_name, &lsquo; &lsquo;, last_name)</code></pre>
 </ul>
 </li>
 </ul>
+<h3 id="primary-key-pk-and-foreign-key-fk"><a name="user-content-primary-key-pk-and-foreign-key-fk" href="#primary-key-pk-and-foreign-key-fk" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Primary Key (PK) and Foreign Key (FK)</h3>
+<ul>
+<li>A <strong>primary key</strong> constraint uniquiely identifies each record in a database table.  These values must be unique, cannot contain NULL values, and each table can only have one primary key.  Note that you can have multiple column values that make up the primary key (e.g. P_ID, LastName, SSN).<ul>
+<li>Add a <em>primary key</em> to a table with a single column (e.g. P_ID) as the constraint: <code>ALTER TABLE MyTable ADD PRIMARY KEY (P_ID)</code></li>
+<li>Add a <em>primary key</em> to a table with multiple columns (e.g. P_ID, LastName) as the constraint: <code>ALTER TABLE MyTable ADD PRIMARY KEY(P_ID, LastName)</code></li>
+<li>Remove a <em>primary key</em>: <code>ALTER TABLE MyTable DROP PRIMARY KEY</code></li>
+</ul>
+</li>
+<li>A <strong>foreign key</strong> constraint in one table is just a <em>primary key</em> in another table.<ul>
+<li>Add a <em>foreign key</em> on a single column as the constraint: <code>ALTER TABLE MyTable ADD FOREIGN KEY (P_ID) REFERENCES OtherTable(P_ID)</code></li>
+<li>Add a <em>foreign key</em> on multiple columns (e.g. P_ID) as the constraint: <code>ALTER TABLE MyTable ADD CONSTRAINT my_fk FOREIGN KEY (P_ID) REFERENCES OtherTable(P_ID)</code></li>
+<li>Remove a <em>foreign key</em> with: <code>ALTER TABLE MyTable DROP FOREIGN KEY my_fk</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="drop-and-truncate"><a name="user-content-drop-and-truncate" href="#drop-and-truncate" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>DROP and TRUNCATE</h3>
+<ul>
+<li>To delete an entire database, be extra sure you want to and can spell correctly, then do: <code>DROP DATABASE MyDatabase</code>.  This deletes everything in the database.</li>
+<li>To delete an entire table (including the table itself), be extra sure you want to and can spell correctly, then do: <code>DROP TABLE MyTable</code></li>
+<li>To delete the data inside an entire table, do: <code>TRUNCATE TABLE MyTable</code></li>
+</ul>
+<h3 id="alter"><a name="user-content-alter" href="#alter" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>ALTER</h3>
+<ul>
+<li>To add, delete, or modify columns in an existing table, use <strong>ALTER</strong>.</li>
+<li>To add a column in a table, use: <code>ALTER TABLE MyTable MODIFY COLUMN MyColumn &lt;datatype&gt;</code></li>
+<li>To delete a column in a table, use: <code>ALTER TABLE MyTable DROP COLUMN MyColumn</code></li>
+<li>To modify a column in a table, use: <code>ALTER TABLE MyTable MODIFY COLUMN MyColumn &lt;datatype&gt;</code></li>
+</ul>
+<h3 id="insert"><a name="user-content-insert" href="#insert" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>INSERT</h3>
+<ul>
+<li>To insert data by field: <code>INSERT INTO MyDatabase.MyTable SET ThisField = ThisData</code></li>
+<li>To insert data by row: <code>INSERT INTO MyDatabase.MyTable VALUES ('field1', 'field2', 'field3'</code></li>
+</ul>
+<h3 id="update"><a name="user-content-update" href="#update" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>UPDATE</h3>
+<pre><code>UPDATE MyDatabase.MyTable SET ThisField = ThisData
+</code></pre>
+<h3 id="delete"><a name="user-content-delete" href="#delete" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>DELETE</h3>
+<pre><code>DELETE FROM MyDatabase.MyTable  # Careful, no criteria deletes the entire database!
+</code></pre>
+<h3 id="if"><a name="user-content-if" href="#if" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>IF</h3>
+<pre><code>IF(2&gt;1, &lsquo;OK&rsquo;, &lsquo;NOT)</code></pre>
+<h3 id="case"><a name="user-content-case" href="#case" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>CASE</h3>
+<pre><code>CASE
+    WHEN 2 &gt; 1
+        THEN &lsquo;OK&rsquo;
+    WHEN 1==1
+        THEN &lsquo;YEP&rsquo;
+    ELSE
+        &lsquo;NOT OK&rsquo;
+END</code></pre>
 <h2 id="other"><a name="user-content-other" href="#other" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Other</h2>
 <h3 id="schemas"><a name="user-content-schemas" href="#schemas" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Schemas</h3>
 <ul>
@@ -1206,6 +1278,9 @@ SELECT &hellip; CONCAT(first_name, &lsquo; &lsquo;, last_name)</code></pre>
 <li>For every index on a table, the database must reorder the index for a new entry</li>
 <li>Each index takes up space in storage and memory</li>
 <li>Do &lsquo;profiling&rsquo; to see where things are slow</li>
+<li>To create an index, do: <code>CREATE INDEX MyIndex on MyTable (colToIndex)</code></li>
+<li>To create an index on a combination of volumns, do: <code>CREATE INDEX MyIndex on MyTable(colToIndex1, colToIndex2, colToIndex3)</code></li>
+<li>To drop an index, do: <code>ALTER TABLE MyTable DROP INDEX MyIndex</code></li>
 </ul>
 <h3 id="normalization-nth-normal-form"><a name="user-content-normalization-nth-normal-form" href="#normalization-nth-normal-form" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Normalization (Nth normal form)</h3>
 <ul>
