@@ -434,8 +434,14 @@ At every stage of the _ANOVA_ we're assessing _variation_ (or _deviance_) from a
         + If _homogeneity of variance_ has been violated, you can try different data transformations or you can try a different version of the _F-ratio_, like _Welch's F_.
         + If there's distributional problems, there are other methods like _bootstrapping_ or _trimmed means_ and _M-estimators_ that can correct for it.
 *  __Planned contrasts__ tells us which groups differ in an _ANOVA_.  This is important because _F-ratio_ tells if there's an effect, but not what group causes it.  _Planned contrasts_ are a way of comparing different groups without causing _familywise error rate_.  We can do this using two methods:
-    1.  __planned comparisons (aka planned constrasts)__ - break down the _variance_ accounted for by the model into component parts.  This is done when you have a specific hypotheses to test.
+    1.  __planned comparisons (aka planned constrasts)__ - break down the _variance_ accounted for by the model into component parts.  This is done when you have a specific hypotheses to test.  Some rules:
+        -  If we have a control group, we compare this against the other groups
+        -  Each comparison must compare only two 'chunks' of variation (e.g. low dose, high dose)
+        -  Once a group has been singled out in a comparison, it can't be used in another comparison (we're slicing up the data like a cake, the same part of a cake can't be on multiple slices)
     2.  __post hoc tests (aka post hoc comparisons)__ - Compare every group (like you're doing multiple _t-tests_) but using a stricter acceptance criterion so that the familywise error rate doesn't rise above the acceptable .05.  This is done when you have no specific hypothesis to test.
+
+
+
 
 <remember to continue here for more ANOVA notes>
 
@@ -455,4 +461,26 @@ For continuous variables we measure using the means, but this is useless for cat
     -  If we're interested in finding out which particular factor contributed significantly in larger contingency tables, we can use the _standardized residuals_.
 
 ### Comparing Multiple Categorical Variables using Loglinear Analysis
-__loglinear analysis__ is used when we want to look at more than two categorical variables.  For example, say we want three variables: Animal (dog or cat), Training (food as reward or affection as reward) and Dance (did they dance or not?)  Again, this can also be seen as a regression model.  Let's not get into the math, but basically categorical data can be expressed in the form of a linear model provided we use log values (thus loglinear analysis).
+__loglinear analysis__ is used when we want to look at more than two categorical variables.  Think of this as the _ANOVA_ for _categorical variables_ (where for every variable we have, we get a main effect but we also get interactions between variables).  For example, say we want three variables: Animal (dog or cat), Training (food as reward or affection as reward) and Dance (did they dance or not?)  Again, this can also be seen as a regression model.  Let's not get into the math, but basically categorical data can be expressed in the form of a linear model provided we use log values (thus loglinear analysis).  The idea is that we try to fit a simpler model without any substantial loss of predictive power through backward elimination (remove one at a time hierarchically).
+*  For example, say we have the following interactions for these three variables: Animal (dog or cat), Training (food or reward), Dance (can they dance or not).  We take the one interaction involving all three variables (i.e. _highest-order interaction_) and remove it.  We look at whether the new model without this interaction and if the new model significantly changes the likelihood ratio statistic, then we stop here and say that we have a significant three way interaction.  If there is no change in the likelihood ratio statistic, then we move to a lower-order interaction. 
+    -  Three main effects (Animal, Training, Dance)
+    -  Three interactions involving two variables each (Animal * Training, Animal * Dance, Training * Dance)
+    -  One interaction involving all three variables (Animal * Training * Dance)
+*  Assumptions in loglinear analysis include:
+    -  _Loglinear analysis_ is an extension of the _chi-square test_ so it has similar assumptions
+    -  Each cell must be independent
+    -  Expected frequencies should be large enough for a reliable analysis.  With more than two variables, it's okay to have up to 20% of cells with expected frequencies less than 5; but all cells must have expected frequencies greater than 1.  If this assumption is broken, try to collapse the data across one or the variables
+*  Reporting results of a loglinear analysis - Example: The three-way loglinear analysis produced a final model that retained all effects.  The likelihood ratio of this model was this and p was that.  This indicated that the highest order interaction (Animal * Training * Dance) was significant.  To break down this effect, separate chi-square tests on the Training and Dance variables were performed separately for dogs and cats.
+
+### Multilevel linear models
+Sometimes data is hierarchical instead of at a single level.  This means that some variables are clustered or nested within other variables (i.e. some of our other analysis may be oversimplification).  Let's use this example data set:
+    -  __Level 1 variable__ - Say we have a lot of children (this is the lowest level of the hierarchy)
+    -  __Level 2 variable__ - Say these students are organized by classrooms (this means children are _nested_ within classes)
+    -  Note: We can have additional levels (e.g. level 3 variable is the school of that classroom, level 4 is the school in that school district)
+*  The idea is that children at different layers (say within the same classroom or the same school) are more similar to each other.  This means that each case is not entirely independent.  To solve for this, we use __intraclass correlation (ICC)__, which represents the proportion of the total variability in the outcome that is attributable to the child's classroom.  This means that if the classroom had a huge effect on the children, then the _ICC_ will be small.  Howerver, if the classroom had little effect on the children, then the _ICC_ will be large.  Simply, _ICC_ says if this hierarchical grouping had an effect on the outcome.
+*  So why use a _multilevel linear model_?  The benefits include:
+    -  We don't have to assume that the relationship between our covariate and our outcome is the same across the different groups that make up our predictor variable.
+    -  We don't need to make the assumption of independence.
+    -  It's okay to have missing data.  You don't have to correct and impute for missing data.
+
+
