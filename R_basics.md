@@ -410,8 +410,8 @@ We've looked at relationships between variables, but sometimes we're interested 
     - __effect-size and t-tests__ - even though a _t-statistic_ might not be statistically significant, it doesn't mean that our effect is unimportant.  To check if an _effect-size_ is substantive, we use the following equation: ``
     - Reporting _t-tests_ should involve stating the finding to which the test relates, report the _test statistic_, _degrees of freedom_, an estimate of the _effect-size_, and the _probability_ of that test statistic.  E.g. On average, participants experienced greater anxiety from real spiders (M = 47.00, SE = 3.18), than from pictures of spiders (M=40.00, SE = 2.68).  This difference was not significant t(21.39) = -1.68, p>.05; however, it did represent a medium-sized effect r=.34
 
-### Comparing Several Means with ANOVA (Analysis of Variance, GLM 1)
-If we want to compare more than two conditions, we use _ANOVA_.  _t-tests_ checked whether two samples have the same mean while _ANOVA_ checks if three or more groups have the same means.  _ANOVA_ is an _omnibus_ test, which means it tests for an overall effect between all groups and does not say what group has a different mean.
+### Comparing Several Means with ANOVA (Analysis of Variance GLM 1, aka One-way ANOVA)
+If we want to compare more than two conditions, we use one-way independent _ANOVA_.  _t-tests_ checked whether two samples have the same mean while _ANOVA_ checks if three or more groups have the same means.  _ANOVA_ is an _omnibus_ test, which means it tests for an overall effect between all groups and does not say what group has a different mean.
     - __familywise (aka experimentwise error rate)__ is the error rate across statistical tests conducted on the same experimental data.  For example, we use _ANOVA_ instead of using multiple _t-tests_ on each pair of groups because the probability of _Type I_ errors would quickly stack (e.g. say .05 level of significance with 3 pairs would be .95 * .95 * .95 = .857 probability of no _Type I error_).  The more groups the more chance of an error.
     - __F-statistic (aka F-ratio)__ is the ratio of the model to its error (much like the _t-statistic_).  Say we have Groups A, B, C.  The _F-ratio_ tells us if the means of these three groups (as a whole) are different.  It can't tell what groups are different (e.g. if groups A and B are the same and C is different, if groups A, B, C are all different).  _F-ratio_ says that the experimental manipulation has some effect, but doesn't say what causes the effect.  The _F-ratio_ can be used to fit a multiple regression model and test the differences between the means (again, much like the _t-statistic_ with a linear regression)
     - When creating _dummy variables_ for _ANOVA_ groups (e.g. Group A, B, C) where we have one less dummy variable than the number of groups in the experiment.  We choose a _control group (aka baseline group)_ that acts as a baseline for other categories.  This baseline group is usually the one with no experiments (e.g. baseline is no viagra and others are low dose and high dose viagra).  When group sizes are unequal, the baseline group should have a large number of samples.
@@ -433,18 +433,77 @@ At every stage of the _ANOVA_ we're assessing _variation_ (or _deviance_) from a
         + Note that _ANOVA_ is a _robust test_, which means it doesn't matter if we break some assumptions (the _F-ratio is still accurate_).  When group sizes are equal, then _F-ratio_ is quite robust.  However, when group sizes are not equal, the accuracy of _F-ratio_ is affected by _skew_.
         + If _homogeneity of variance_ has been violated, you can try different data transformations or you can try a different version of the _F-ratio_, like _Welch's F_.
         + If there's distributional problems, there are other methods like _bootstrapping_ or _trimmed means_ and _M-estimators_ that can correct for it.
-*  __Planned contrasts__ tells us which groups differ in an _ANOVA_.  This is important because _F-ratio_ tells if there's an effect, but not what group causes it.  _Planned contrasts_ are a way of comparing different groups without causing _familywise error rate_.  We can do this using two methods:
-    1.  __planned comparisons (aka planned constrasts)__ - break down the _variance_ accounted for by the model into component parts.  This is done when you have a specific hypotheses to test.  Some rules:
+*  __Planned contrasts__ tells us which groups differ in an _ANOVA_.  This is important because _F-ratio_ tells if there's an effect, but not what group causes it.  _Planned contrasts_ are a way of comparing different groups without causing _familywise error rate_.  We can do this using two methods (_planned comparisons__ or _post hoc comparisons__):
+  1.  __planned comparisons (aka planned constrasts)__ - break down the _variance_ accounted for by the model into component parts.  This is done when you have a specific hypotheses to test.  Some rules:
         -  If we have a control group, we compare this against the other groups
         -  Each comparison must compare only two 'chunks' of variation (e.g. low dose, high dose)
         -  Once a group has been singled out in a comparison, it can't be used in another comparison (we're slicing up the data like a cake, the same part of a cake can't be on multiple slices)
-    2.  __post hoc tests (aka post hoc comparisons)__ - Compare every group (like you're doing multiple _t-tests_) but using a stricter acceptance criterion so that the familywise error rate doesn't rise above the acceptable .05.  This is done when you have no specific hypothesis to test.
+        -  When we're comparing two groups, we're just comparing the mean of the group to the mean of the other group
+        -  E.g. We compare the average of the placebo group to the average of the low dose and high dose groups; if the standard errors are the same, the experimental group with the highest mean (high dose) will be significantly different from the mean of the placebo group.
+  *  _Planned comparisons_ can be either: _Orthogonal comparisons_ or _Non-orthogonal comparisons_
+  *  __Orthogonal comparisons__
+    -  Now we want to answer, what groups do we compare?  Instead of creating dummy variables of 0 and 1 as we would the main _ANOVA_, we instead assign a _weight_.  Here's a few basic rules for that:
+        -  Choose sensible comparisons
+        -  Groups coded with positive weights will be compared against groups coded with negative weights (so assign one chunk a positive, the other a negative; it's arbitrary which one is positive or negative)
+        -  The sum of weights for a comparison should be zero
+        -  If a group is not involved in a comparison, it's automatically assigned a weight of 0 (which eliminates it from all calculations)
+        -  For a given comparison, the weights assigned to the group in one chunk of variation should be equal to the number of groups in the opposite chunk of variation
+    -  Let's go through an example of how to apply these:
+        1.)  Example (Step 1): Chunk1 (Low Dose vs High Dose) vs Chunk2 (Placebo)
+        2.)  Example (Step 2): Chunk1 (Positive weight) vs Chunk2 (Negative Weight)
+        3.)  Example (Step 3): Chunk1 has two chunks ('Low Dose' and 'High Dose'), they each have a magnitude of 1 (for a sum of 2), weight of +1 each (for a sum of +2).  Chunk2 only has one chunk ('Placebo') so it has a magnitude of 2, weight of -2.
+        4.)  The sum of the weights should add up on both sides so this means Chunk1 has weight of +1 (for Low Dose) and +1 (for High Dose) -2 (for Placebo) = `1+1-2=0`
+        5.)  To compare just two groups (Low Dose and High Dose), we set the Placebo with a weight of 0 (which eliminates it from calculations).  We now have a comparison of Chunk1 (High Dose, 1 Magnitude, +1 Weight) vs Chunk2 (Low Dose, 1 Magnitude, -1 Weight).
+        6.)  We now have the following dummy variables:
 
+                  Dum_var1 (comp1), Dum_var2 (comp2), Product (comp1* comp2)
+       Placebo                  -2,                0,                     0
+       Low Dose                  1,               -1,                    -1
+       High Dose                 1,                1,                     1
+       Total                     0                 0                      0
 
+        7.)  We want to do an __orthogonal__ comparison (basically make sure that _Total_ row is 0) and this means our comparisons are independent (so we can use _t-tests_).  The _p-values_ won't be correlated so we won't get _familywise errors_
+        8.)  From the significance values of the _t-tests_ we can see if the experimental groups (Low Dose, High Dose) were significantly different from the control (Placebo).
 
+  *  __Non-orthogonal comparisons__
+    -  Similar to _orthogonal comparisons_ except the comparisons don't have to sum to zero.
+    -  Example, you can compare across different levels, say Chunk1 is 'High Dose' only and Chunk2 is 'Placebo'
+    
+                  Dum_var1 (comp1), Dum_var2 (comp2), Product (comp1* comp2)
+       Placebo                  -2,               -1,                     2
+       Low Dose                  1,                0,                     0
+       High Dose                 1,                1,                     1
+       Total                     0                 0                      3
+    
+    -  The _p-values_ here are correlated so you'll need to be careful how to interpret the results.  Instead of .05 probability, you might want to have a more conservative level before accepting that a given comparison is statistically meaningful.
+
+  *  __Polynomial Contrast (trend analysis)__ is a more complex way of looking at comparisons.  The different groups usually represent a different amount of a single common variable (e.g. amount of dosage for drug) and its effect
+      -  __Linear Trend__ is where the group means increase proportionately (e.g. a positive linear trend is where the more of the drug we give, the more effect, looks like a linear line)
+      -  __Quadratic Trend__ is where the the group means increase at the beginning, peak in the middle, then goes down (e.g. drug enhances performance if given a certain amount, then after a certain amount, the more you give the worse the performance); basically there's one direction change.  This requires at least 3 groups.
+      -  __Cubic Trend__ is where the group means goes up, down, up (or vice versa); basically there's two direction changes.  This requires at least 4 groups.
+      -  __Quartic Trend__ is where the group goes up, down, up, down (or vice versa); basically there's at least four direction changes. 
+
+  2.  __post hoc comparisons (aka post hoc tets, data mining, exploring data)__
+  Compare every group (like you're doing multiple _t-tests_) but using a stricter acceptance criterion so that the familywise error rate doesn't rise above the acceptable .05.  This is done when you have no specific hypothesis to test.
+    -  _post hoc comparisons_ is kinda cheating since this consits of __pairwise comparisons__ that compare all different combinations of the treatment groups.  However, _pairwise comparisons_ control _familywise errors_ by correcting the level of significance for each test so that the overall _Type I error rate_ across all comparisons remains at .05.  This is accomplished in multiple ways:
+        +  __Bonferroni correction__ is a trade-off for controlling the _familywise error rate_ with a loss of _statistical power_; this means that the probability of rejecting an effect that does actually exist is increased (_Type II error_).  For example, we do 10 tests, we use .005 as our criterion for significant (instead of .05).  Formula is `<insert formula>`
+        +  __Holm's method__ computes the _p-values_ for all of the pairs of groups in your data, then order them from smallest to largest.  We start similar with the normal _Bonferroni correction_ for the first comparison, but then each subsequent comparison the _p-value_ gets bigger (i.e. less conservative).  This method is _stepped_, which means we continue as long as comparisons are significant.  If there's a non-significant comparison we stop and assume all remaining comparisons are also non-significant.
+        +  __Benjamini-Hochberg__'s method doesn't focus on making _Type I error rate_ like the above methods (basically, if we make a _Type I_ error, it's not that bad) and instead focuses on __False Discovery Rate (FDR)__, which is the proportion of falsely rejected null hypothesis to the total number of rejected null hypothesis.  The _Benjamini-Hochberg_ tries to keep the _FDR_ under control instead of the _familywise error rate_.  Like _Holm's method_, you comput the _p-value_ for all pairs of groups in your data and order them similarly (smallest to largest).  The difference is that this method is _step-up_, which means instead of working down the talbe we work up.  We say the bottom value is non-significant and continue moving up the table until we see a significant comparison, then assume that all other comparisons are also significant.
+    -  So which _post hoc procedure_ should you use?  There's these and numerous others that R doesn't do out of the box.  When deciding, consider:
+        1.  Whether the test controls the _Type I error rate_
+        2.  Whether the test controls the _Type II error rate_ (i.e. has good statistical power)
+        3.  Whether the test is reliable when the test assumptions of _ANOVA_ have been violated
+        *  _Bonferroni_ and __Tukey's Honest Significant Difference (HSD) tests (aka Tukey's range test, Tukey method__ both control the _Type I error rate_, but are conservative so they lack _statistical power_.  _Bonferroni_ has more power when the number of comparisons is small.  _Tukey_ is more powerful when testing large numbers of means.
+        *  _Benjamini-Hochberg_ has more power than _Holm's_; _Holm's_ has more power than _Bonferroni_.  Just remember _Benjamini-Hochberg_ doesn't attempt to control _Type I errors_.
+        *  __Warning__: The above _post-hoc comparisons_ perform badly when group sizes are unequal and when population variances are different.  If this is the case, look up _bootstrapping_ or _trimmed means_ and _M-estimators_ (both of which include a bootstrap).  Use _bootstrap_ to control _Type I errors_ and _M-estimators_ if you want more _statistical power_.
+
+    *  Note: for some reason, the effect size _r^2_ specifically for _ANOVAs_ are called __eta squared__ and looks like `n^2`
+
+### Comparing Several Means with ANCOVA (Analysis of Covariance GLM 2)
+_ANCOVA_ is like _ANOVA_, but also includes one or more continuous variables that predict the outcome (or dependent variable).  These __covariates__ are continuous variables that are not part of the main experimental manipulation, but have an influence on the dependent variable.
+*  Say we look at the example with the effects of Viagra on the libido; the _covariates_ would be other things like medication (e.g. antidepressants).  _ANCOVA_ attempts to measure these continuous variables and include them in the regression model.
 
 <remember to continue here for more ANOVA notes>
-
 
 ### Comparing Categorical Variables
 For continuous variables we measure using the means, but this is useless for categorical variables (since we'd assign numbers to categories and it would just depend on how many categories there were).  Instead, for categorical variables, we count the _frequency_ of the category to get a _contingency table_, which is a tabulation of the frequencies.  We use different algorithms depending on how many categorical variables there are (2 or more than 2).
