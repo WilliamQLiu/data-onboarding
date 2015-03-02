@@ -211,6 +211,16 @@ Used to combine rows from two or more tables.  Types of joins include:
             'NOT OK'
     END
 
+You can combine all of the above into something like this (Note: From SQL Server):
+    
+    SELECT IVRName, 
+    SUM(CASE WHEN Disconnection in ('Answer') THEN 1 END) AS Answered, 
+    SUM(CASE WHEN Disconnection in ('Abandon') THEN 1 END) AS Abandoned
+    FROM LifeNetDW.dbo.QueueMetrics
+    WHERE CallTime > '2015-1-31' AND IVRName IS NOT NULL
+    GROUP BY IVRName
+
+
 ## Other
 
 ### Schemas

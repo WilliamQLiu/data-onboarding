@@ -500,8 +500,24 @@ At every stage of the _ANOVA_ we're assessing _variation_ (or _deviance_) from a
     *  Note: for some reason, the effect size _r^2_ specifically for _ANOVAs_ are called __eta squared__ and looks like `n^2`
 
 ### Comparing Several Means with ANCOVA (Analysis of Covariance GLM 2)
-_ANCOVA_ is like _ANOVA_, but also includes one or more continuous variables that predict the outcome (or dependent variable).  These __covariates__ are continuous variables that are not part of the main experimental manipulation, but have an influence on the dependent variable.
-*  Say we look at the example with the effects of Viagra on the libido; the _covariates_ would be other things like medication (e.g. antidepressants).  _ANCOVA_ attempts to measure these continuous variables and include them in the regression model.
+_ANCOVA_ is like _ANOVA_, but also includes __covariates__, which are one or more continuous variables that are not part of the main experimental manipulation, but have an influence on the outcome (aka dependent variable).  We include _covariates_ because of two reaons:
+  1. To reduce within-group error variance: In _ANOVA_, if we can explain some of the 'unexplained' variance _(SSr)__ in terms of _covariates_, then we reduce the error variance, allowing us to more accurately assess the effect of the independent variable _(SSm)_ 
+  2. Elimination of confounds: this means that an experiment has unmeasured variables that confound the results (i.e. variables other than the experimental manipulation that affect the outcome variable).  _ANCOVA_ removes the bias from the variables that influence the independent variable.
+*  E.g. Say we look at the example with the effects of Viagra on the libido; the _covariates_ would be other things like medication (e.g. antidepressants).  _ANCOVA_ attempts to measure these continuous variables and include them in the regression model.
+*  ANCOVA has the same assumptions as any linear model with these two additional considerations:
+  1. independence of the covariate and treatment effect - Unexplained variance _(SSr)_ should only overlap with the _Variance explained by Covariate_ (and not with _Variance explained by the independent variable_ or else the effect is obscured).
+  2. __homogeneity of regression slopes__ - the slopes of the different regression lines should all be equivalent (i.e. parallel among groups)  For example, if there's a positive relationship between the covariate and the outcome in one group, then we assume there's a positive relationship for all other groups
+*  __Sum of Squares (Type I, II, III, IV)__
+  -  Remember that order matters when evaluating
+  -  __Type I Sum of Squares__ We put one predictor into the model first (it gets evaluated), then the second (then it gets evaluated), etc.  Use if the variables are completely independent of each other (unlikely), then _Type I SS_ can evaluate the true effect of each variable.  
+  -  __Type II Sum of Squares__ Use if you're interested in main effects; it gives an accurate picture of a main effect because they're evaluated ignoring the effect of any interactions involving the main effect under consideration.  However, if an interaction is present, then _Type II_ can't evaluate main effects (because variance from the interaction term is attributed to them)
+  -  __Type III Sum of Squares__ is usually the default; use this when sample sizes are unequal, however they work only when predictors are encoded with _orthogonal contrasts_ instead of a _non-orthogonal contrast_.
+  -  __Type IV Sum of Squares__ is the same as _Type III_, but is designed for situations in which there's missing data.
+*  __Interpreting the covariate__ - Draw a scatterplot of the covariate against the outcome (e.g. participant's libido as y, partner's libido as x).  If covariate is positive, then there's a positive relationship where the covariate increases, so does the outcome.  If covariate is negative, then there's a negative relationship where the covariate increases, the outcome decreases.
+*  __Partial eta squared (aka partial n^2)__ is an effect size measure for _ANCOVA_ (kinda similar to _eta squared (n^2)_ in _ANOVA_ or _r^2_).  This differs from _eta squared_ in that it looks not at the proportion of total variance that a variable explains, but at the proportion of variance that a variable explains that is not explained by other variables in the analysis.
+
+### Factorial ANOVA (GLM 3)
+
 
 <remember to continue here for more ANOVA notes>
 
