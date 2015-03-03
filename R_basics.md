@@ -410,6 +410,7 @@ We've looked at relationships between variables, but sometimes we're interested 
     - __effect-size and t-tests__ - even though a _t-statistic_ might not be statistically significant, it doesn't mean that our effect is unimportant.  To check if an _effect-size_ is substantive, we use the following equation: ``
     - Reporting _t-tests_ should involve stating the finding to which the test relates, report the _test statistic_, _degrees of freedom_, an estimate of the _effect-size_, and the _probability_ of that test statistic.  E.g. On average, participants experienced greater anxiety from real spiders (M = 47.00, SE = 3.18), than from pictures of spiders (M=40.00, SE = 2.68).  This difference was not significant t(21.39) = -1.68, p>.05; however, it did represent a medium-sized effect r=.34
 
+
 ### Comparing Several Means with ANOVA (Analysis of Variance GLM 1, aka One-way ANOVA)
 If we want to compare more than two conditions, we use one-way independent _ANOVA_.  _t-tests_ checked whether two samples have the same mean while _ANOVA_ checks if three or more groups have the same means.  _ANOVA_ is an _omnibus_ test, which means it tests for an overall effect between all groups and does not say what group has a different mean.
     - __familywise (aka experimentwise error rate)__ is the error rate across statistical tests conducted on the same experimental data.  For example, we use _ANOVA_ instead of using multiple _t-tests_ on each pair of groups because the probability of _Type I_ errors would quickly stack (e.g. say .05 level of significance with 3 pairs would be .95 * .95 * .95 = .857 probability of no _Type I error_).  The more groups the more chance of an error.
@@ -516,8 +517,40 @@ _ANCOVA_ is like _ANOVA_, but also includes __covariates__, which are one or mor
 *  __Interpreting the covariate__ - Draw a scatterplot of the covariate against the outcome (e.g. participant's libido as y, partner's libido as x).  If covariate is positive, then there's a positive relationship where the covariate increases, so does the outcome.  If covariate is negative, then there's a negative relationship where the covariate increases, the outcome decreases.
 *  __Partial eta squared (aka partial n^2)__ is an effect size measure for _ANCOVA_ (kinda similar to _eta squared (n^2)_ in _ANOVA_ or _r^2_).  This differs from _eta squared_ in that it looks not at the proportion of total variance that a variable explains, but at the proportion of variance that a variable explains that is not explained by other variables in the analysis.
 
-### Factorial ANOVA (GLM 3)
-_ANOVA_ and _ANCOVA_ looks at differences between groups with only a single independent variable (i.e. just one variable being manipulated).  _Factorial ANOVA_ looks at differences between groups with two or more independent variables.  When there are two or more independent variables, it is __factorial design__ (because sometimes variables are known as _factors_).
+
+### Factorial ANOVA
+_ANOVA_ and _ANCOVA_ looks at differences between groups with only a single independent variable (i.e. just one variable being manipulated).  _Factorial ANOVA_ looks at differences between groups with two or more independent variables.  When there are two or more independent variables, it is __factorial design__ (because sometimes variables are known as _factors_).  There are multiple types of this design including:
+    -  __independent factorial design__ - there are several independent variables and each has been measured using different entities (_between groups_)
+    -  __repeated-measures (related) factorial design__ - there are several independent variables measured, but the same entities have been used in all conditions
+    -  __mixed design__ - several independent variables have been measured, some have been measured with different entities and some used the same entities
+
+_ANOVA naming convention_ - The names of _ANOVA_s can seem confusing, but are easy to break down.  We're simply saying how many independent variables and how they were measured.  This means:
+1.  The quantity of independent variables (e.g. one independent variable translates to 'one-way independent')
+2.  Are the people being measured the same or different participants?
+    - If the same participants, we say _repeated measures_
+    - If different participants, we say _independent_
+    - If there are two or more independent variables, then it's possible some variables use the same participants while others use different participants so we say _mixed_
+
+
+## Independent Factorial Design (GLM 3)
+An example of _Factorial ANOVA_ using two independent variables is looking at the effects of alcohol on mate selection at nightclubs.  The hypothesis was that after alcohol has been consumed (the first independent variable), subjective perceptions of physical attractiveness would become more inaccurate.  Say we're also interested if this effect is different for men and women (this is the second independent variable).  We break groups into gender (male, female), drinks (none, 2 pints, 4 pints), and measured based off an independent assessment of attractiveness (say 1 to 100).
+*  A _Two-way ANOVA_ is very similar to a _One-way ANOVA_ with the exception that in a _Two-way ANOVA_ the variance that is explained by the experiment (_SSm) is broken down into the following:
+    -  _SSa (aka main effect of variable A)_ is the variance explained by Variable A
+    -  _SSb (aka main effect of variable B)_ - is the variance explained by Variable B
+    -  _SSa*b (aka the interaction effect)_ - is the variance explained by the interaction of Variable A and Variable B
+*  For the _F-ratio_, each one of the above effects (_SSa_, _SSb_, and _SSa*b_) all have their own _F-ratio_ so that we can tell if each effect happened by chance or reflects an effect of our experimental manipulations
+*  __interaction graphs__ can help you interpret and visualize significant interaction effects
+*  Once again, we run _Levene's test_ to see if there are any significant differences between group variances (_homogeneity of variance_); for example, check if the variance in attractiveness differs across all different gender and alcohol group combinations.
+*  For choosing _contrasts_, we need to define contrasts for all of the independent variables.  If we use _Type II sums of squares_, then we have to use an _orthogonal contrast_.  If we want to look at the _interaction effect_ (i.e. the effect of one independent variable at individual levels of the other independent variable), we use a technique called __simple effects analysis__
+*  Like _ANOVA_, do a _post hoc test_ on the _main effects_(e.g. _SSa_, _SSb_) in order to see where the differences between groups are.  If you want to see the _interaction effect_ (e.g. _SSa*b_) then look at _contrasts_.
+
+
+## Repeated-Measures Designs (GLM 4)
+_Repeated measures_ is when the same entities participate in all conditions of the experiment.  A _Repeated-Measures ANOVA_ is like a regular _ANOVA_, but it violates the assumption that scores in different conditions are independent (scores are likely to be related because they're from the same people), which will cause the _F-test_ to lack accuracy.  Instead, we have to make a different assumption called the __assumption of sphericity (aka circularity)__, which means that we assume the relationship between pairs of experimental conditions is similar (i.e. the level of dependence between experimental experimental conditions is roughly equal)
+
+
+
+
 
 <remember to continue here for more ANOVA notes>
 

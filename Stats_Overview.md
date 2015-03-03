@@ -23,14 +23,13 @@ Welcome!  This is a short onboarding course for new data analysts.  I'll cover t
 
 ## Data Analysis - What to Measure
 
-
 ### Variables
 Data is made up of variables.  Variables can have any value (like a category or number).  `y = 10` says that the variable '_y_' has the value of '_10_'.  There are two types of variables:
 
 * __Independent Variable (aka cause, predictor)__ - the variable(s) does not depend on any other variable (e.g. _Smoked Cigarettes Per Day_, _Time Spent Studying_, _How much you eat_).  This variable is thought to be the cause of some effect.  In experimental research, this variable(s) is manipulated.
 * __Dependent Variable (aka effect, outcome)__ - the variable(s) that we think are an effect because the value depends on the independent variables (e.g. _Has Lung Cancer_, _Test Score_).  This variable(s) is thought to be affected by the independent variable.
 * __Example__: '_Time Spent Studying_' causes a change in '_Test Score_'.  '_Test Score_' can't cause a change in '_Time Spent Studying_'.  '_Test Score_' (_independent variable_) depends on '_Time Spent Studying_' (_dependent variable_)
-* Summary: What you're trying to do is see if the _independent variable(s)_ causes some kind of change in the _dependent variable(s)_; we're checking if there's any relationship.
+* Summary: What you're trying to do is see if the _independent variable(s)_ causes some kind of change in the _dependent variable(s)_; we're checking if there's any relationship, which later we'll understand it to be as part of the overall: `outcome = model + error`.
 
 
 ### Levels of Measurement
@@ -45,6 +44,7 @@ Different levels of measurement are used to categorize and quantify variables.  
     - __Interval__ - Two or more possibilities, there is a logical order that you can measure (i.e. numbers that you can do arithmetic with), and there are equal intervals (e.g. Fahrenheit measurement of 40 to 50 degrees is the same difference as 50 to 60 degrees)
     - __Ratio__ - Two or more possibilities, there is a logical order that you can measure, there are equal intervals, and there is a true zero point (e.g. the weight of an object cannot weigh less than 0) 
 * _Note: Parametric and Non-parametric_: The types of data determines the types of tests: _parametric_ or _non-parametric_, and they affect the type of statistical procedures you can use.  The main differences are that parametric tests have either 'interval' or 'ratio' scales and uses information about the mean and deviation from the mean (meaning it has a relatively normal distribution), which gives it more statistical power.  Nonparametric statistics uses 'nominal' or 'ordinal' data, (i.e. less information) in their calculation and are thus less powerful.  
+
 
 ### Reliability
 * __Measurement Error__ - the discrepancy between the numbers we use to represent the thing we're measuring and the actual value of measuring it directly (e.g. I measure my height with a ruler, but might be off a bit)
