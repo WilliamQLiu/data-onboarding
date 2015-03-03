@@ -27,9 +27,10 @@ Welcome!  This is a short onboarding course for new data analysts.  I'll cover t
 ### Variables
 Data is made up of variables.  Variables can have any value (like a category or number).  `y = 10` says that the variable '_y_' has the value of '_10_'.  There are two types of variables:
 
-* __Independent Variable__ - the outcome; the variable's value does not depend on any other variable (e.g. _Has Lung Cancer_, _Test Score_)
-* __Dependent Variable__ - the predictor(s); the variable(s) that we think are an effect because the value depends on the independent variables (e.g. _Cigarettes Per Day_, _Time Spent Studying_)
-* __Example__: '_Time Spent Studying_' causes a change in '_Test Score_'.  '_Test Score_' can't cause a change in '_Time Spent Studying_'.  '_Test Score_' (independent variable) depends on '_Time Spent Studying_' (dependent variable)
+* __Independent Variable (aka cause, predictor)__ - the variable(s) does not depend on any other variable (e.g. _Smoked Cigarettes Per Day_, _Time Spent Studying_, _How much you eat_).  This variable is thought to be the cause of some effect.  In experimental research, this variable(s) is manipulated.
+* __Dependent Variable (aka effect, outcome)__ - the variable(s) that we think are an effect because the value depends on the independent variables (e.g. _Has Lung Cancer_, _Test Score_).  This variable(s) is thought to be affected by the independent variable.
+* __Example__: '_Time Spent Studying_' causes a change in '_Test Score_'.  '_Test Score_' can't cause a change in '_Time Spent Studying_'.  '_Test Score_' (_independent variable_) depends on '_Time Spent Studying_' (_dependent variable_)
+* Summary: What you're trying to do is see if the _independent variable(s)_ causes some kind of change in the _dependent variable(s)_; we're checking if there's any relationship.
 
 
 ### Levels of Measurement

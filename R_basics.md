@@ -517,7 +517,7 @@ _ANCOVA_ is like _ANOVA_, but also includes __covariates__, which are one or mor
 *  __Partial eta squared (aka partial n^2)__ is an effect size measure for _ANCOVA_ (kinda similar to _eta squared (n^2)_ in _ANOVA_ or _r^2_).  This differs from _eta squared_ in that it looks not at the proportion of total variance that a variable explains, but at the proportion of variance that a variable explains that is not explained by other variables in the analysis.
 
 ### Factorial ANOVA (GLM 3)
-
+_ANOVA_ and _ANCOVA_ looks at differences between groups with only a single independent variable (i.e. just one variable being manipulated).  _Factorial ANOVA_ looks at differences between groups with two or more independent variables.  When there are two or more independent variables, it is __factorial design__ (because sometimes variables are known as _factors_).
 
 <remember to continue here for more ANOVA notes>
 
