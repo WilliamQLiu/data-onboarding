@@ -458,9 +458,9 @@ At every stage of the _ANOVA_ we're assessing _variation_ (or _deviance_) from a
         6.)  We now have the following dummy variables:
 
                   Dum_var1 (comp1), Dum_var2 (comp2), Product (comp1* comp2)
-       Placebo                  -2,                0,                     0
-       Low Dose                  1,               -1,                    -1
-       High Dose                 1,                1,                     1
+       Grp Placebo              -2,                0,                     0
+       Grp Low Dose              1,               -1,                    -1
+       Grp High Dose             1,                1,                     1
        Total                     0                 0                      0
 
         7.)  We want to do an __orthogonal__ comparison (basically make sure that _Total_ row is 0) and this means our comparisons are independent (so we can use _t-tests_).  The _p-values_ won't be correlated so we won't get _familywise errors_
@@ -469,11 +469,11 @@ At every stage of the _ANOVA_ we're assessing _variation_ (or _deviance_) from a
   *  __Non-orthogonal comparisons__
     -  Similar to _orthogonal comparisons_ except the comparisons don't have to sum to zero.
     -  Example, you can compare across different levels, say Chunk1 is 'High Dose' only and Chunk2 is 'Placebo'
-    
+
                   Dum_var1 (comp1), Dum_var2 (comp2), Product (comp1* comp2)
-       Placebo                  -2,               -1,                     2
-       Low Dose                  1,                0,                     0
-       High Dose                 1,                1,                     1
+       Grp Placebo              -2,               -1,                     2
+       Grp Low Dose              1,                0,                     0
+       Grp High Dose             1,                1,                     1
        Total                     0                 0                      3
     
     -  The _p-values_ here are correlated so you'll need to be careful how to interpret the results.  Instead of .05 probability, you might want to have a more conservative level before accepting that a given comparison is statistically meaningful.
@@ -518,23 +518,23 @@ _ANCOVA_ is like _ANOVA_, but also includes __covariates__, which are one or mor
 *  __Partial eta squared (aka partial n^2)__ is an effect size measure for _ANCOVA_ (kinda similar to _eta squared (n^2)_ in _ANOVA_ or _r^2_).  This differs from _eta squared_ in that it looks not at the proportion of total variance that a variable explains, but at the proportion of variance that a variable explains that is not explained by other variables in the analysis.
 
 
-### Factorial ANOVA
+### Factorial ANOVA (Independent Factorial Design, Repeated Measures Factorial Design, Mixed Design)
 _ANOVA_ and _ANCOVA_ looks at differences between groups with only a single independent variable (i.e. just one variable being manipulated).  _Factorial ANOVA_ looks at differences between groups with two or more independent variables.  When there are two or more independent variables, it is __factorial design__ (because sometimes variables are known as _factors_).  There are multiple types of this design including:
-    -  __independent factorial design__ - there are several independent variables and each has been measured using different entities (_between groups_)
+    -  __independent factorial design__ - there are several independent variables and each has been measured using different entities 
     -  __repeated-measures (related) factorial design__ - there are several independent variables measured, but the same entities have been used in all conditions
     -  __mixed design__ - several independent variables have been measured, some have been measured with different entities and some used the same entities
 
-_ANOVA naming convention_ - The names of _ANOVA_s can seem confusing, but are easy to break down.  We're simply saying how many independent variables and how they were measured.  This means:
+__ANOVA naming convention__ - The names of _ANOVA_s can seem confusing, but are easy to break down.  We're simply saying how many independent variables and how they were measured.  This means:
 1.  The quantity of independent variables (e.g. one independent variable translates to 'one-way independent')
 2.  Are the people being measured the same or different participants?
-    - If the same participants, we say _repeated measures_
-    - If different participants, we say _independent_
-    - If there are two or more independent variables, then it's possible some variables use the same participants while others use different participants so we say _mixed_
+    - If the same participants, we say __repeated measures__
+    - If different participants, we say __independent__
+    - If there are two or more independent variables, then it's possible some variables use the same participants while others use different participants so we say __mixed__
 
 
-## Independent Factorial Design (GLM 3)
+## Independent Factorial Design ANOVA (GLM 3)
 An example of _Factorial ANOVA_ using two independent variables is looking at the effects of alcohol on mate selection at nightclubs.  The hypothesis was that after alcohol has been consumed (the first independent variable), subjective perceptions of physical attractiveness would become more inaccurate.  Say we're also interested if this effect is different for men and women (this is the second independent variable).  We break groups into gender (male, female), drinks (none, 2 pints, 4 pints), and measured based off an independent assessment of attractiveness (say 1 to 100).
-*  A _Two-way ANOVA_ is very similar to a _One-way ANOVA_ with the exception that in a _Two-way ANOVA_ the variance that is explained by the experiment (_SSm) is broken down into the following:
+*  Calculations for a _Two-way ANOVA_ is very similar to a _One-way ANOVA_ with the exception that in a _Two-way ANOVA_ the variance that is explained by the experiment (_SSm_) is broken down into the following:
     -  _SSa (aka main effect of variable A)_ is the variance explained by Variable A
     -  _SSb (aka main effect of variable B)_ - is the variance explained by Variable B
     -  _SSa*b (aka the interaction effect)_ - is the variance explained by the interaction of Variable A and Variable B
@@ -545,11 +545,35 @@ An example of _Factorial ANOVA_ using two independent variables is looking at th
 *  Like _ANOVA_, do a _post hoc test_ on the _main effects_(e.g. _SSa_, _SSb_) in order to see where the differences between groups are.  If you want to see the _interaction effect_ (e.g. _SSa*b_) then look at _contrasts_.
 
 
-## Repeated-Measures Designs (GLM 4)
-_Repeated measures_ is when the same entities participate in all conditions of the experiment.  A _Repeated-Measures ANOVA_ is like a regular _ANOVA_, but it violates the assumption that scores in different conditions are independent (scores are likely to be related because they're from the same people), which will cause the _F-test_ to lack accuracy.  Instead, we have to make a different assumption called the __assumption of sphericity (aka circularity)__, which means that we assume the relationship between pairs of experimental conditions is similar (i.e. the level of dependence between experimental experimental conditions is roughly equal)
+## Repeated-Measures Designs ANOVA (aka Within-Subjects ANOVA, ANOVA for correlated samples, GLM 4)
+_Repeated measures_ is when the same entities participate in all conditions of the experiment.  A _Repeated-Measures ANOVA_ is like a regular _ANOVA_, but it violates the assumption that scores in different conditions are independent (scores are likely to be related because they're from the same people), which will cause the _F-test_ to lack accuracy.
+*  Since the _F-test_ lacks accuracy, we have to make a different assumption called the __assumption of sphericity (aka circularity)__, which is an assumption about the structure of the covariance matrix; we assume the relationship between pairs of experimental conditions is similar (More precisely, the variances of the differences between treatment levels is about the same).  That means we calculate the differences between pairs of scores for all combinations of the treatment level.  We then calculate the variance of these differences.  As such, _sphericity_ is only an issue with three or more variables.
+*  __compound symmetry__ is a stricter requirement than sphericity (if this is met, so is _sphericity_; if this is not met, you still need to check for _sphericity_).  This requirement is true when both the variances across conditions are equal (same as the _homogeneity of variance assumption_ in _between-group designs_) and the covariances between pairs of conditions are equal.
+*  __Mauchly's test__ is a way to assess _sphericity_ and let you know if the variances of the differences between conditions are equal.  If _Mauchly's test_ is significant, then we have to be wary of the _F-ratio_, otherwise you're okay.  However, remember that this is also dependent on sample size; large samples can have small deviations from sphericity to be significant while in small samples large violations can be non-significant.
+*  Violating _sphericity_ means a loss of statistical power and it also impacts _post hoc tests_.  If _sphericity_ is definitely not violated, use _Tukey's test_.  If _sphericity_ is violated, then using the _Bonferroni method_ is usually the most robust of the univariate techniques in terms of power and control of _Type I error rate_.
+*  __epsilon__ is a descriptive statistic that indicates the degree to which _sphericity_ has been violated.  The formula is: `epsilon = 1/(k-1)` where `k` is the number of repeated-measures conditions.  If epsilon is closer to 1, the more homogeneous the variances of differences (and closer to the data being spherical).
+*  If data violates the _assumption of sphericity_, then we can apply a correction factor that is applied to the degrees of freedom used to assess the _F-ratio_ (or we can not use the _F-ratio_).
+    -  __Greenhouse-Geisser correction__ - Use if epsilon is less than .75 or if nothing is known about sphericity (otherwise the correction is too conservative and there's too many false null hypothesis that fail to be rejected).  Go look up how to do this.
+    -  __Huynh-Feldt correction__ - Use if estimate is more than .75
+    -  Use a different test other than the _F-ratio_ like using multivariate test statistics (_multivariate analysis_, _MANOVA_) because they don't depend on the _assumption of sphericity_.  There's a trade-off in power between _univariate_ and _multivariate tests_.  Go look up how to do this.
+    -  Analyze the data as a _multilevel model_ so we can interpret the model coefficients without worrying about sphericity because dummy-coding our group variables ensures that we only compare two things at once (and sphericity is only an issue when comparing three or more means).  Not for the faint of heart (think about doing a _multivariate test_ first)
+*  The calculations for _repeated-measures ANOVA_ can be seen as `SSt = SSb + SSw` where _SSt_ is the Total Variability, _SSb_ is the Between-Participant variability and _SSw_ is the Within-Participant Variability.  The main difference is that the _SSw_ ('Within-Participant Sum of Squares') is now broken down into:
+    -  _SSw_ looks at the variation with an actual person, not within a group of people; some of this variation is explained by the effect of the experiment and some of it is just random fluctuation
+    -  _SSm_ (Model Sum of Squares) is the effect of the experiment
+    -  _SSr_ (Residual Sum of Squares) represents the error; the variation not explained by the experiment
+*  Example of this is if we tested a group of participants (Person1, Person2, Person3, Person4, Person5, Person6) each eating multiple gross foods (NastyFoodA, NastyFoodB, NastyFoodC, NastyFoodD) and measuring how long it takes to retch.  The independent variable is the type of food eaten (e.g. NastyFoodA) since that's what we're manipulating, the dependent variable is the time to retch (since it depends on the food).  _SSw_ represents each participant's own tolerance level for nasty food.  _SSm_ is how much our manipulation (change in food) calculates the mean for each level of the independent variable (mean time to retch for say NastyFoodA, NastyFoodB, etc) and compares this to the overall mean of all foods.  _SSr_ is just the error.
+*  To check _effect size_ for _repeated-measures designs_, we calculate __omega squared (w^2)__.  This formula is slightly different than in _one-way independent ANOVAs_ and it looks pretty scary so google it up.
+*  __Factorial repeated-measures designs__ is just extending the _repeated-measures designs_ to include a second or more independent variable.  If there's two independent measures, then it's a _two-way repeated-measures ANOVA_.  If there's three independent measures, then it's a _three-way repeated-measures ANOVA_, etc.  Again we'll need to be careful about interaction effects of multiple independent variables.
 
+## Mixed Designs ANOVA (GLM 5)
+__Mixed Designs ANOVA__ is where you compare several means when there are two or more independent variables and at least one independent variable has been measured using the same participants (_repeated-measures_) and at least another independent variable has been measured using different participants (_independent design_).
+*  You can explore the data similar to a _repeated-measures design ANOVA_ or as a _multilevel model_.  If you're using the _ANOVA_ approach, check for the _assumption of sphericity_, then choose what you want to _contrast_, compute the main model (might need to run a robust version of the test), then follow up with your _post hoc tests_.
 
+### Non-parametric Tests
 
+### Multivariate Analysis of Variance (MANOVA)
+
+### Factor Analysis
 
 
 <remember to continue here for more ANOVA notes>
