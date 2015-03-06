@@ -532,7 +532,7 @@ __ANOVA naming convention__ - The names of _ANOVA_s can seem confusing, but are 
     - If there are two or more independent variables, then it's possible some variables use the same participants while others use different participants so we say __mixed__
 
 
-## Independent Factorial Design ANOVA (GLM 3)
+## Independent Factorial Design ANOVA (aka Between Groups, Between-Subjects ANOVA, GLM 3)
 An example of _Factorial ANOVA_ using two independent variables is looking at the effects of alcohol on mate selection at nightclubs.  The hypothesis was that after alcohol has been consumed (the first independent variable), subjective perceptions of physical attractiveness would become more inaccurate.  Say we're also interested if this effect is different for men and women (this is the second independent variable).  We break groups into gender (male, female), drinks (none, 2 pints, 4 pints), and measured based off an independent assessment of attractiveness (say 1 to 100).
 *  Calculations for a _Two-way ANOVA_ is very similar to a _One-way ANOVA_ with the exception that in a _Two-way ANOVA_ the variance that is explained by the experiment (_SSm_) is broken down into the following:
     -  _SSa (aka main effect of variable A)_ is the variance explained by Variable A
@@ -545,7 +545,7 @@ An example of _Factorial ANOVA_ using two independent variables is looking at th
 *  Like _ANOVA_, do a _post hoc test_ on the _main effects_(e.g. _SSa_, _SSb_) in order to see where the differences between groups are.  If you want to see the _interaction effect_ (e.g. _SSa*b_) then look at _contrasts_.
 
 
-## Repeated-Measures Designs ANOVA (aka Within-Subjects ANOVA, ANOVA for correlated samples, GLM 4)
+## Repeated-Measures Designs ANOVA (aka Within Groups, Within-Subjects ANOVA, ANOVA for correlated samples, GLM 4)
 _Repeated measures_ is when the same entities participate in all conditions of the experiment.  A _Repeated-Measures ANOVA_ is like a regular _ANOVA_, but it violates the assumption that scores in different conditions are independent (scores are likely to be related because they're from the same people), which will cause the _F-test_ to lack accuracy.
 *  Since the _F-test_ lacks accuracy, we have to make a different assumption called the __assumption of sphericity (aka circularity)__, which is an assumption about the structure of the covariance matrix; we assume the relationship between pairs of experimental conditions is similar (More precisely, the variances of the differences between treatment levels is about the same).  That means we calculate the differences between pairs of scores for all combinations of the treatment level.  We then calculate the variance of these differences.  As such, _sphericity_ is only an issue with three or more variables.
 *  __compound symmetry__ is a stricter requirement than sphericity (if this is met, so is _sphericity_; if this is not met, you still need to check for _sphericity_).  This requirement is true when both the variances across conditions are equal (same as the _homogeneity of variance assumption_ in _between-group designs_) and the covariances between pairs of conditions are equal.
@@ -565,18 +565,65 @@ _Repeated measures_ is when the same entities participate in all conditions of t
 *  To check _effect size_ for _repeated-measures designs_, we calculate __omega squared (w^2)__.  This formula is slightly different than in _one-way independent ANOVAs_ and it looks pretty scary so google it up.
 *  __Factorial repeated-measures designs__ is just extending the _repeated-measures designs_ to include a second or more independent variable.  If there's two independent measures, then it's a _two-way repeated-measures ANOVA_.  If there's three independent measures, then it's a _three-way repeated-measures ANOVA_, etc.  Again we'll need to be careful about interaction effects of multiple independent variables.
 
-## Mixed Designs ANOVA (GLM 5)
+
+## Mixed Designs ANOVA (aka split-splot ANOVA, GLM 5)
 __Mixed Designs ANOVA__ is where you compare several means when there are two or more independent variables and at least one independent variable has been measured using the same participants (_repeated-measures_) and at least another independent variable has been measured using different participants (_independent design_).
 *  You can explore the data similar to a _repeated-measures design ANOVA_ or as a _multilevel model_.  If you're using the _ANOVA_ approach, check for the _assumption of sphericity_, then choose what you want to _contrast_, compute the main model (might need to run a robust version of the test), then follow up with your _post hoc tests_.
+*  At this point you'll realize why you want to limit the number of independent variables that you include.  The interpretation gets increasingly difficult with the more variables you have.
 
 ### Non-parametric Tests
+_Non-parametric tests_ are statistical procedures that make fewer assumptions about the type of data, mostly on the principle of _ranking_ the data.  For example, find the lowest score (rank of 1), then next highest score (rank of 2) and so forth.  We then carry out the analysis on the rank instead of the actual data.  These tests include:
+    *  _Wilcoxon rank-sum test (aka Mann-Whitney test)_
+    *  _Wilcoxon signed-rank test_
+    *  _Kruskal-Wallis test_
+    *  _Friedman's test_
 
+*  __Wilcoxon's rank-sum test (aka WRS, Mann-Whitney test, Mann-Whitney-Wilcoxon test, Wilcoxon-Mann-Whitney test)__ use for the non-parametric equivalent of a _independent t-test_ (i.e. if you want to test the differences between two conditions and different participants have been used in each condition).  The theory is that you rank the data and ignore the group to which a person belonged (say we're looking at depression levels between ecstasy and alcohol users).
+    -  A _tied rank_ is where multiple values are given the same rank.  Say we had two scores of 6 and they would've both ranked 3 and 4, we then take the average of the two potential ranks (3+4/2=3.5)
+    -  We need to correct for the number of people in the group (or else larger groups would have larger ranks) so we calculate the _mean rank_ by taking the mean of the numbers with this formula: `mean rank = (N(N+1))/2` so say you have
+    -  Now for each group, calculate `W = sum of ranks - mean rank`
+    -  __Monte Carlo method__ is an _exact approach_ to obtain the significance level (_p-value_).  This means creating lots of data sets that match the sample, but instead of putting people into the correct groups, they're put into a random group MANY times.  It then compares the difference that appears in the data when the null hypothesis is true is as large as the difference in your data.  This is good for small samples.  Keep in mind:
+        *  This process takes a while because it's done MANY times; with an increase in sample size, the length of time takes more and more
+        *  If you have _tied ranks_ in the data, you can't use this method because this is an exact approach.
+    -  If your sample size is large (say larger than 40) or if you have _tied ranks_, try a _normal approximation approach_ to calculate the significance level (_p-value_).  This doesn't need a normal distribution; it just assumes that the sampling distribution of the _W_ statistic is normal, which means that the standard error can be computed that can be used to calculate a _z_ and then a _p-value_.
+        *  With a _normal approximation_, you have an option to do a __continuity correction__, which tries to smooth out the distribution (since there's _tied ranks_), but comes at the expensve of maybe making your _p-value_ a little too high.
+
+*  __Wilcoxon signed-rank test__ is used in situations where there are two setse of scores to compare, but these scores come from the same participants.  This is the _non-parametric_ equivalent of a _dependent t-test_.  The theory is that we're looking at the differences between scores in the two conditions you're comparing (e.g. see the effects of two drugs, one measured on Saturday and again on Wednesday for the same participants).  The main difference is that there's a sign (positive or negative) assigned to the rank.
+    -  For each group, if the difference in scores are the same (from Sat to Wed) then we exclude this data from the ranking
+    -  We make a note of the sign (positve or negative) and then rank the differences (starting with the smallest) while ignoring the sign
+    -  We deal with _tied ranks_ in the same way as before, we average them (e.g. say we had two scores of 6 and they would've both ranked 3 and 4, we then take the average of the two potential ranks (3+4/2=3.5))
+    -  __T+__ is where we collect the ranks that came from a positive difference and add them up
+    -  __T-__ is where we collect the ranks that came from a negative difference and add them up
+    -  We do _T+_ and _T-_ calculations for both groups (say alcohol and ecstasy)
+    -  To calculate the significance of the test statistic _T_, we need:
+        *  The mean __T__, which is given by `T = (n(n+1)/4)`
+        *  The standard error __SEt__, which is given by `SEt = sqrt( (n(n+1)(2n+1))/24 )` 
+        *  With the above values, we can convert the test statistic into a _z-score_, which then tells us if the test is significant based on the _p-value_.  This will tell us if there is a significant difference between depression scores on Wed and Sat for both ecstasy and alcohol.
+
+*  __Kruskal-Wallis test__ looks at the differences between several independent groups.  This is the _non-parametric_ counterpart to the _one-way independent ANOVA_.  The theory is also based on ranked data (ordering scores from lowest to highest ignoring the group that the score belongs, lowest score of 1 and going up).
+    -  Once you rank the data you then collect the scores back into their groups and add up the ranks for each group.  The sum of ranks for each group is denoted by __Ri__ where _i_ is used to denote the particular group
+    -  Once the sum of ranks (_Ri_) has been calculated for each group, the test statistic __H__ is calculated `insert formula`.  _H_ has a _chi-square distribution_ and for this distribution, there is one value for the _degrees of freedom_, which is one less than the number of groups `(k-1)`
+    -  You can visualize the comparisons by group really well by using a _boxplot_.  For example, sperm count as y, number of soya meals as groups (no soya meals, 1 soya meal, 4 soya meals, 7 soya meals a week) on x 
+    -  To do a _non-parametric_ _post hoc procedure_ is to do a _Wilcoxon rank-sum test_ on all possible comparisons; this involves taking the difference between the mean ranks of the different groups and comparing this to a value based on the value of _z_ (corrected for the number of comparisons being done) and a constant based on the total sample size and the sample size in the two groups being compared.  The inequality is given in formula `insert formula`
+    -  __Jonckheere-Terpstra test (aka Jonckheere test)__ is used when you think that groups are different and you want to hypothesize that there's a trend (i.e. an ordered pattern to the medians of the groups you're comparing).
+
+*  __Friedman's ANOVA__ looks at differences between several related groups.  This is used for testing differences between conditions where there are more than two conditions and the same participants have been used in all conditions (each case contributes several scores to the data).  The theory is also based on _ranked data_.
+    -  In your columns (say you're measuring weight at different times), you put down the weight at different times (start, after 1 month, after 2 months).  Each person is a row.
+    -  Now go through each row and give rank per column (e.g. if someone lost weight each month, we would have a rank of '3 for start', '2 for the first month', '1 for the last month'
+    -  Now add up the ranks across each column (e.g. sum rank for the 'start' column, sum rank for the '1 month' column, etc.), this is the __Ri__
+    -  Then calculate the test statistic __Fr__ given by the equation `insert equation`.  When the number of people tested is large (bigger than 10), this test statistic has a _chi-square distribution_ and there is one value for the degrees of freedom, which is one less than the number of groups `(k-1)`
+    -  Again, you can follow up on the main analysis with _post hoc tests_ and checking if the _differences_ is significant.
+    
 ### Multivariate Analysis of Variance (MANOVA)
+__MANOVA (multivariate analysis of variance)__ is used when you want to compare groups on several dependent variables (outcomes); when you can compare against several dependent variables, this is known as a __multivariate test__ (as opposed to _ANOVA_ that can only be used on one dependent varialbe, which is known as a __univariate test__).  We can use _MANOVA_ when there is one independent variable or when there are several.
+    -  Using _MANOVA_ instead of _ANOVA_: The reason why we don't do a separate _ANOVA_ for each dependent variable is similar to why we don't do multiple _t-tests_ (if we conduct more tests on the same data, the more we inflate the _familywise error rate_, thus the increased chance of _Type I error_).  Also, if we do a bunch of _ANOVA_s, the relationship between dependent variables is ignored, whereas _MANOVA_ includes all dependent variables in the same analysis and can account for the relationship between dependent variables.  _ANOVA_ can only tell us if groups differ on a single dimension whereas _MANOVA_ has the power to detect whether groups differ along a combination of dimensions.  For example, we can't tell happiness by individual factors of: work, social, sexual, and self-esteem, but you can tell by the combination of factors (i.e. _MANOVA_ has greater power to detect an effect)
+    -  
+
+-  __discriminant function analysis__
+
 
 ### Factor Analysis
-
-
-<remember to continue here for more ANOVA notes>
+<make sure to complete>
 
 ### Comparing Categorical Variables
 For continuous variables we measure using the means, but this is useless for categorical variables (since we'd assign numbers to categories and it would just depend on how many categories there were).  Instead, for categorical variables, we count the _frequency_ of the category to get a _contingency table_, which is a tabulation of the frequencies.  We use different algorithms depending on how many categorical variables there are (2 or more than 2).
