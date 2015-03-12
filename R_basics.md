@@ -185,3 +185,24 @@ You can do a quick plot using _qplot()_ (quick and easy) or build a plot layer b
     - __theme_line()__ - colour, size, linetype for grid lines
     - __theme_segment()__ - colour, size, linetype for axis line and axis tick marks
 
+### Statistics
+
+## Check for normal a normal distribution
+
+__Shapiro-Wilk test__ used as a way to test for _normality (aka normal distribution)_
+
+    shapiro.test(variable)
+
+__Q-Q plot (aka Quantile-Quantile plot)__ used as a way to test for _normality (aka normal distribution)_ 
+
+    qplot(sample = rexam$exam, stat="qq")
+
+__Levene's Test__ tests the null hypothesis that the variances in different groups are equal (i.e. the difference between the variances is zero).  This is from the _car_ package.  If _Levene's Test_ is significant (i.e. p<=.05), then we can conclude the null hypothesis is incorrect and the _assumption of homogeneity of variances_ is violated.  If _Levene's Test_ is non-significant (i.e. p>.05) then the variances are roughly equal and the assumption holds true.
+
+
+    leveneTest(outcome_variable, group, center = median/mean)
+    # where the outcome_variable is what we want to test the variances
+    # group variable is a factor
+    # center can be median or mean
+
+

@@ -207,7 +207,6 @@ To get more accurate (instead of just eye-balling), we can:
     - __Levene's test (F)__ - _Levene's test_ tests that the variances in different groups are equal (i.e. the difference between variances is equal to zero).
         + Test is significant at p <= .05, which we can then conclue that the variances are significantly different (meaning it is not _homogeneity of variance_)
         + Test is non-significant at p > .05, then the variances are roughly equal and it is _homogeneity of variance_
-        + In _R_, we can use the _leveneTest()_ function from the _car_ package.  It looks like this general form: `leveneTest(outcome variable, grouping variable, center = median/mean)` where the outcome variable is what we want to test the variances and the grouping variable is a factor
         + _Note:_ in large samples, Leven's test can be significant even when group variances are not very different; for this reason, it should be interpreted with the _variance ratio_
     - __Hartley's Fmax (aka variance ratio)__ - the ratio of the variances between the group with the biggest variance the group with the smallest variance.  This value should be smaller than the critical values
 * __interval data__ - data should be measured at least in the interval level (tested with common sense)
@@ -351,7 +350,7 @@ When making a model, we should check for two things 1.) how well the model fits 
         +  If the dots have a pattern to them (like a curved shape) then this is probably a violation of the assumption of _linearity_
         +  If the dots have a pattern and are more spread out at some points on the plot than others then this probably reflects violations of both _homogeneity of variance_ and _linearity_
     -  Graph the histogram of the residuals
-        +  If the histogram looks like a normal distribution (and the Q-Q plot looks like a diagonal line) then its good
+        +  If the histogram looks like a normal distribution (and the _Q-Q plot_ looks like a diagonal line) then its good
         +  If the histogram looks non-normal, then things might not be good
 
 
@@ -553,7 +552,7 @@ An example of _Factorial ANOVA_ using two independent variables is looking at th
 *  Like _ANOVA_, do a _post hoc test_ on the _main effects_(e.g. _SSa_, _SSb_) in order to see where the differences between groups are.  If you want to see the _interaction effect_ (e.g. _SSa*b_) then look at _contrasts_.
 
 
-## Repeated-Measures Designs ANOVA (aka Within Groups, Within-Subjects ANOVA, ANOVA for correlated samples, GLM 4)
+## Repeated-Measures Factorial Designs ANOVA (aka Within Groups, Within-Subjects ANOVA, ANOVA for correlated samples, GLM 4)
 _Repeated measures_ is when the same entities participate in all conditions of the experiment.  A _Repeated-Measures ANOVA_ is like a regular _ANOVA_, but it violates the assumption that scores in different conditions are independent (scores are likely to be related because they're from the same people), which will cause the _F-test_ to lack accuracy.
 *  Since the _F-test_ lacks accuracy, we have to make a different assumption called the __assumption of sphericity (aka circularity)__, which is an assumption about the structure of the covariance matrix; we assume the relationship between pairs of experimental conditions is similar (More precisely, the variances of the differences between treatment levels is about the same).  That means we calculate the differences between pairs of scores for all combinations of the treatment level.  We then calculate the variance of these differences.  As such, _sphericity_ is only an issue with three or more variables.
 *  __compound symmetry__ is a stricter requirement than sphericity (if this is met, so is _sphericity_; if this is not met, you still need to check for _sphericity_).  This requirement is true when both the variances across conditions are equal (same as the _homogeneity of variance assumption_ in _between-group designs_) and the covariances between pairs of conditions are equal.
@@ -574,7 +573,7 @@ _Repeated measures_ is when the same entities participate in all conditions of t
 *  __Factorial repeated-measures designs__ is just extending the _repeated-measures designs_ to include a second or more independent variable.  If there's two independent measures, then it's a _two-way repeated-measures ANOVA_.  If there's three independent measures, then it's a _three-way repeated-measures ANOVA_, etc.  Again we'll need to be careful about interaction effects of multiple independent variables.
 
 
-## Mixed Designs ANOVA (aka split-splot ANOVA, GLM 5)
+## Mixed Designs ANOVA (aka split-plot ANOVA, GLM 5)
 __Mixed Designs ANOVA__ is where you compare several means when there are two or more independent variables and at least one independent variable has been measured using the same participants (_repeated-measures_) and at least another independent variable has been measured using different participants (_independent measures design_).
 *  You can explore the data similar to a _repeated-measures design ANOVA_ or as a _multilevel model_.  If you're using the _ANOVA_ approach, check for the _assumption of sphericity_, then choose what you want to _contrast_, compute the main model (might need to run a robust version of the test), then follow up with your _post hoc tests_.
 *  At this point you'll realize why you want to limit the number of independent variables that you include.  The interpretation gets increasingly difficult with the more variables you have.
@@ -597,7 +596,7 @@ _Non-parametric tests_ are statistical procedures that make fewer assumptions ab
     -  If your sample size is large (say larger than 40) or if you have _tied ranks_, try a _normal approximation approach_ to calculate the significance level (_p-value_).  This doesn't need a normal distribution; it just assumes that the sampling distribution of the _W_ statistic is normal, which means that the standard error can be computed that can be used to calculate a _z_ and then a _p-value_.
         *  With a _normal approximation_, you have an option to do a __continuity correction__, which tries to smooth out the distribution (since there's _tied ranks_), but comes at the expensve of maybe making your _p-value_ a little too high.
 
-*  __Wilcoxon signed-rank test__ is used in situations where there are two setse of scores to compare, but these scores come from the same participants.  This is the _non-parametric_ equivalent of a _dependent t-test_.  The theory is that we're looking at the differences between scores in the two conditions you're comparing (e.g. see the effects of two drugs, one measured on Saturday and again on Wednesday for the same participants).  The main difference is that there's a sign (positive or negative) assigned to the rank.
+*  __Wilcoxon signed-rank test__ is used in situations where there are two sets of scores to compare, but these scores come from the same participants.  This is the _non-parametric_ equivalent of a _dependent t-test_.  The theory is that we're looking at the differences between scores in the two conditions you're comparing (e.g. see the effects of two drugs, one measured on Saturday and again on Wednesday for the same participants).  The main difference is that there's a sign (positive or negative) assigned to the rank.
     -  For each group, if the difference in scores are the same (from Sat to Wed) then we exclude this data from the ranking
     -  We make a note of the sign (positve or negative) and then rank the differences (starting with the smallest) while ignoring the sign
     -  We deal with _tied ranks_ in the same way as before, we average them (e.g. say we had two scores of 6 and they would've both ranked 3 and 4, we then take the average of the two potential ranks (3+4/2=3.5))
