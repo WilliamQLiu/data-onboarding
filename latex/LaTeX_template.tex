@@ -1,0 +1,216 @@
+% Testing LaTeX code
+% learn.tex
+
+\documentclass[11pt,letterpaper]{article}
+
+%% PACKAGES  %%
+\usepackage[paperheight=11in, paperwidth=8.5in, top=20mm, bottom=20mm]{geometry}  % page dimensions
+\usepackage{comment}  % for commenting
+\usepackage{xcolor}  % for custom colors
+\usepackage{lipsum} % for lorem ipsum dummy text
+\usepackage{mdwlist} % create more compact lists, part of mdwtools package
+\usepackage{enumitem} % for setlist{nosep} to remove space around list
+\usepackage[hidelinks]{hyperref}  % for hyperlinking
+%% END PACKAGES %%
+
+
+%% GLOBALS  %%
+\definecolor{customlightblue}{rgb}{0.6, 0.6, 0.9}
+\definecolor{customtitle}{gray}{0.95}
+\definecolor{customgray}{gray}{0.75} % 75% gray, 25% white
+\setlength{\parindent}{0pt} % do not automatically indent paragraphs
+\thispagestyle{empty} % removes page numbers, header, footer
+\setlist{nosep} % remove space separator around whole list
+\hypersetup{ % sets colors for hyperlinks
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+%% END GLOBALS  %%
+
+
+%% DOCUMENT %%
+\begin{document}
+
+% Contact Info Section %
+\textsf{\textcolor{customlightblue}{\Large{Report Name}}}
+
+\smallskip
+
+\normalsize{AAAA} \hfill
+\normalsize{BBBB} \hfill
+\normalsize{CCCC CCCC CCCC CCCC CCCC CCCC CCCC CCCC CCCC}
+
+\bigskip
+\medskip
+
+% Profile Section %
+
+\textsf{\textcolor{customlightblue}{\Large{Summary}}}  % textsf for sanss serof
+
+\smallskip
+
+\normalsize{Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna. Donec vehicula augue eu neque.} % Lines to generate
+% End Profile Section %
+
+\bigskip
+\medskip
+
+% Skills Section %
+\textsf{\textcolor{customlightblue}{\Large{Items}}}  % textsf for sanss serof
+
+\smallskip
+
+%\normalsize{\textbf{Cat 123 456:}} \hfill
+%\normalsize{hello world} \hfill
+%\normalsize{this is a test} \hfill
+%\normalsize{a} \hfill
+%\normalsize{real} \hfill
+%\normalsize{good test}
+
+%\normalsize{\textbf{Cat 2:}} \hfill
+%\normalsize{test} \hfill
+%\normalsize{stuff} \hfill
+%\normalsize{what?} \hfill
+%\normalsize{really?!  are you sure?}
+
+%\normalsize{\textbf{Cat la la la la:}} \hfill
+%\normalsize{aaa} \hfill
+%\normalsize{bbb} \hfill
+%\normalsize{ccc} \hfill
+%\normalsize{ddd}
+
+\begin{description*}
+    \item[Category 1] \hfill
+    helloworld \hfill
+    this is a test \hfill
+    a \hfill
+    real \hfill
+    good test
+    \item[Cat 2] \hfill
+    test \hfill
+    stuff \hfill
+    what \hfill
+    really?! are you sure?
+    \item[More Category 3] \hfill
+    aaa \hfill
+    bbb \hfill
+    ccc \hfill
+    ddd
+\end{description*}
+
+
+% End Skills Section %
+
+\bigskip
+\medskip
+
+% Experience Section %
+
+\textsf{\textcolor{customlightblue}{\Large{Other Items}}}  % textsf for sanss serof
+
+\smallskip
+
+% Experience Section 1 %
+
+\large{\textbf{Information 1}} \hfill \large{\textbf{Information A}}
+
+\normalsize{
+    \textcolor{customgray}{Test}
+    } \hfill
+\normalsize{
+    \textcolor{customgray}{More Testing Stuff}
+    }
+
+\normalsize{Lorem ipsum dolor sit amet, consectetuer adipiscing elit.}
+\smallskip
+\begin{itemize*}  % * is to use mdwlist to make list items compact
+    \item This is the first item
+    \item This is the second item
+    \item This is the third item
+\end{itemize*}
+
+\bigskip
+
+% Experience Section 2 %
+
+\large{\textbf{Information 2}} \hfill \large{\textbf{Information B}}
+
+\normalsize{
+    \textcolor{customgray}{Test}
+    } \hfill
+\normalsize{
+    \textcolor{customgray}{More Testing Stuff}
+    }
+
+\normalsize{Lorem ipsum dolor sit amet, consectetuer adipiscing elit.}
+\smallskip
+\begin{itemize*}  % * is to use mdwlist to make list items compact
+    \item This is the first item
+    \item This is the second item
+    \item This is the third item
+\end{itemize*}
+
+\bigskip
+
+% Experience Section 3 %
+
+\large{\textbf{Information 3}} \hfill \large{\textbf{Information C}}
+
+\normalsize{
+    \textcolor{customgray}{Test}
+    } \hfill
+\normalsize{
+    \textcolor{customgray}{More Testing Stuff}
+    }
+
+\normalsize{Lorem ipsum dolor sit amet, consectetuer adipiscing elit.}
+\smallskip
+\begin{itemize*}  % * is to use mdwlist to make list items compact
+    \item This is the first item
+    \item This is the second item
+    \item This is the third item
+\end{itemize*}
+
+\bigskip
+
+% Experience Section 4 %
+
+\large{\textbf{Information 4}} \hfill \large{\textbf{Information D}}
+
+\normalsize{
+    \textcolor{customgray}{Test}
+    } \hfill
+\normalsize{
+    \textcolor{customgray}{More Testing Stuff}
+    }
+
+\normalsize{Lorem ipsum dolor sit amet, consectetuer adipiscing elit.}
+\smallskip
+\begin{itemize*}  % * is to use mdwlist to make list items compact
+    \item This is the first item
+\end{itemize*}
+
+\bigskip
+\medskip
+% End Experience Section %
+
+
+%% Empty List Section %%
+\textsf{\textcolor{customlightblue}{\Large{Empty List Section}}} % textsf for sanss serof
+
+\smallskip
+
+\normalsize{Some Text} \hfill \normalsize{Some Date}
+
+\normalsize{Some Other Text} \hfill \normalsize{Some Other Date}
+
+\normalsize{More Text} \hfill \normalsize{Some Other Date}
+
+\href{http://www.wikibooks.org}{Wikibooks Home} \hfill \normalsize{Some other stuff}
+
+%% End Empty List Section %%
+
+\end{document}
+%% END DOCUMENT %%
